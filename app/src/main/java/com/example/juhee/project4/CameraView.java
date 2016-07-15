@@ -71,8 +71,8 @@ public class CameraView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_view_activity);
         textureView = (TextureView) findViewById(R.id.texture);
-        /*assert textureView != null;
-        textureView.setSurfaceTextureListener(textureListener);*/
+        assert textureView != null;
+        textureView.setSurfaceTextureListener(textureListener);
     }
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
@@ -110,7 +110,7 @@ public class CameraView extends AppCompatActivity {
             cameraDevice = null;
         }
     };
-/*    final CameraCaptureSession.CaptureCallback captureCallbackListener = new CameraCaptureSession.CaptureCallback() {
+    final CameraCaptureSession.CaptureCallback captureCallbackListener = new CameraCaptureSession.CaptureCallback() {
         @Override
         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
@@ -132,7 +132,7 @@ public class CameraView extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
     protected void createCameraPreview() {
         try {
@@ -213,7 +213,7 @@ public class CameraView extends AppCompatActivity {
             }
         }
     }
-/*    @Override
+    @Override
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
@@ -230,5 +230,5 @@ public class CameraView extends AppCompatActivity {
         //closeCamera();
         stopBackgroundThread();
         super.onPause();
-    }*/
+    }
 }
