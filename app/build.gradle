@@ -28,4 +28,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.google.android.gms:play-services:9.2.0'
     compile 'com.facebook.android:facebook-android-sdk:4.14.0'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+
 }

@@ -18,11 +18,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
+
+
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.Socket;
+import com.github.nkzawa.socketio.client.IO;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class GpsInfo extends Service implements android.location.LocationListener {
 
 
-    private int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION=100;
     private final Context mContext;
 
     // 현재 GPS 사용유무
@@ -38,13 +48,18 @@ public class GpsInfo extends Service implements android.location.LocationListene
     double lat; // 위도
     double lon; // 경도
 
-    // 최소 GPS 정보 업데이트 거리 10미터
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1;
+    // 최소 GPS 정보 업데이트 거리 2미터
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 2;
 
-    // 최소 GPS 정보 업데이트 시간 밀리세컨이므로 1분
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 1 * 1;
+    // 최소 GPS 정보 업데이트 시간 밀리세컨이므로 2초
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 5 * 1;
 
     protected LocationManager locationManager;
+
+    public Socket mSocket;
+    final String SERVER_IP = "52.78.66.95";
+    final String SERVER_PORT = ":12345";
+
 
     public GpsInfo(Context context) {
         this.mContext = context;
@@ -191,6 +206,48 @@ public class GpsInfo extends Service implements android.location.LocationListene
     @Override
     public void onLocationChanged(Location location) {
 
+        JSONObject jsonObject = new JSONObject();
+
+
+        // get changed location
+        location = getLocation();
+
+        // put in jason object
+        try {
+            jsonObject.put("lat",String.valueOf(location.getLatitude()));
+            jsonObject.put("lon",String.valueOf(location.getLongitude()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(mContext,"Location changed:"+location.toString(),Toast.LENGTH_SHORT).show();
+
+        // Send GPS information to Server using Socket
+        try {
+                        mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+        } catch (Exception e) {}
+        mSocket.connect();
+        mSocket.emit("heartbeat",jsonObject);
+
+        // Get response
+        mSocket.on("heartbeatRes", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args){
+                Log.e("HHH","HearBeat Response");
+                JSONArray jsonRes = (JSONArray) args[0];
+                /*
+                @@@@@@
+                받은걸로 지도에 띄우기,
+                띄운거에 클릭 이벤트로 카메라로 넘겨주기...?
+                @@@@@@@@
+                 */
+                ((MapPane)MapPane.mContext).pickMarkers(jsonRes);
+
+            }
+        });
+
+
+
     }
 
     @Override
@@ -213,4 +270,20 @@ public class GpsInfo extends Service implements android.location.LocationListene
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+   /* public void pickMarkers(JSONArray jsonArray){
+        for (int i = 0; i<jsonArray.length(); i++ ){
+            JSONObject one;
+            String kind;
+            try {
+               one = jsonArray.getJSONObject(i);
+                if (one.get("kind") == "CAT"){
+                    mContext.getApplicationContext();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }*/
 }

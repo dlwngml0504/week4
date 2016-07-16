@@ -26,12 +26,22 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.TimerTask;
 
 public class MapPane extends FragmentActivity implements OnMapReadyCallback {
+
+
+    public static Context mContext;
 
     // GPSTracker class
     private GpsInfo gps;
@@ -45,6 +55,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_activity);
+        mContext = this;
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -98,24 +109,36 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                 gps.showSettingsAlert();
             }
 
-            //second =
         }
 
-     /*       LatLng sydney = new LatLng(-33.867, 151.206);
+    public void pickMarkers(JSONArray jsonArray) {
 
-
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.e("MapPane","onMapReady permission reject!!");
-                return;
+        for (int i = 0; i<jsonArray.length(); i++ ){
+            JSONObject one;
+            String whichCat;
+            LatLng position;
+            try {
+                one = jsonArray.getJSONObject(i);
+                if (one.get("kind") == "CAT"){
+                    whichCat = one.get("name").toString();
+                    JSONObject pos =(JSONObject)one.get("position");
+                    position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
+                    //_map.addMarker(new MarkerOptions().position(position).icon("BITMAP ICON!!!!!"))
+                    _map.addMarker(new MarkerOptions().position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromAsset(String.valueOf(R.mipmap.cat)))); //????
+                    _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Log.e("MARKER", "MARKER CLICK EVENT");
+                            // 그 마커 클릭 시 카메라 뷰로 인텐트 넘어감 //
+                            Intent intent = new Intent(MapPane.this,CameraView.class);
+                            startActivity(intent);
+                            return true;
+                        }
+                    });
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            map.setMyLocationEnabled(true);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-
-
-            map.addMarker(new MarkerOptions()
-                    .title("Sydney")
-                    .snippet("The most populous city in Australia.")
-                    .position(sydney));
-        }*/
+        }
+    }
 }
