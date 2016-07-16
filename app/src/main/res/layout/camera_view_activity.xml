@@ -13,6 +13,6 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@drawable/cat"/>
+        android:background="@drawable/common_plus_signin_btn_icon_light"/>
 
 </RelativeLayout>
