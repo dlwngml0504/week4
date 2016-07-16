@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
@@ -29,6 +32,10 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
 
 
@@ -36,6 +43,10 @@ public class MainActivity extends AppCompatActivity{
     CallbackManager callbackManager;
     private final int MY_PERMISSION_REQUEST_STORAGE = 100;
     private static final String TAG = "AppPermission";
+
+    public Socket mSocket;
+    final String SERVER_IP = "52.78.66.95";
+    final String SERVER_PORT = ":12345";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +164,37 @@ public class MainActivity extends AppCompatActivity{
 
                     // permission was granted, yay! do the
                     // calendar task you need to do.
+
+                    //@@@@ id받아오기 ㅋㅋㅋㅋ @@@@
+                     String loginID = "";
+
+                    mSocket.off("init"); mSocket.off("initRes");
+
+                    // Send Login information to Server using Socket
+                    try {
+                        mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+                    } catch (Exception e) {}
+                    mSocket.connect();
+                    try {
+                        mSocket.emit("init",new JSONObject().put("ID",loginID));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Get response
+                    mSocket.on("initRes", new Emitter.Listener() {
+                        @Override
+                        public void call(final Object... args){
+                            Log.e("HHH","HearBeat Response");
+                            JSONArray jsonRes = (JSONArray) args[0];
+                            /*
+                            @@@@@@
+                            유저 정보창 : 가지고있는 돈, 아이템, 친밀도 등... 적절한데에 띄위주기...
+                            @@@@@@@@
+                             */
+                        }
+                    });
+
 
                 } else {
 

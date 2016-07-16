@@ -24,6 +24,9 @@ import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 import com.github.nkzawa.socketio.client.IO;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,6 +108,7 @@ public class GpsInfo extends Service implements android.location.LocationListene
                             lon = location.getLongitude();
                             Log.e("GpsInfo latitude", String.valueOf(lat));
                             Log.e("GpsInfo longtitude", String.valueOf(lon));
+                            Log.e("Bearing",String.valueOf(location.getBearing()));
                         }
                     }
                 }
@@ -220,7 +224,16 @@ public class GpsInfo extends Service implements android.location.LocationListene
             e.printStackTrace();
         }
 
-        Toast.makeText(mContext,"Location changed:"+location.toString(),Toast.LENGTH_SHORT).show();
+       // Toast.makeText(mContext,"Location changed:"+location.toString(),Toast.LENGTH_SHORT).show();
+
+        ((MapPane)MapPane.mContext)._map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(location.getLatitude(),location.getLongitude())).tilt(30).zoom(16).bearing(location.getBearing()).build();
+        Toast.makeText(this.mContext,  String.valueOf(location.getBearing()),Toast.LENGTH_SHORT);
+        ((MapPane)MapPane.mContext)._map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        /*@@@@@@@@@@@@2
+        mSocket.off("heartbeat"); mSocket.off("heartbeatRes");
 
         // Send GPS information to Server using Socket
         try {
@@ -235,16 +248,18 @@ public class GpsInfo extends Service implements android.location.LocationListene
             public void call(final Object... args){
                 Log.e("HHH","HearBeat Response");
                 JSONArray jsonRes = (JSONArray) args[0];
-                /*
+                *//*
                 @@@@@@
                 받은걸로 지도에 띄우기,
                 띄운거에 클릭 이벤트로 카메라로 넘겨주기...?
                 @@@@@@@@
-                 */
+                 *//*
                 ((MapPane)MapPane.mContext).pickMarkers(jsonRes);
 
             }
         });
+        @@@@@@@@@@@@@@@
+        */
 
 
 

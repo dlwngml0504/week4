@@ -71,7 +71,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
         }
 
 
-         gps = new GpsInfo(getApplicationContext());
+
 
         SupportMapFragment mapFragment = (SupportMapFragment)this.getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapPane.this);
@@ -90,6 +90,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                 Log.e("Hi","iiiiiiiiiiiiiiiiiiii");
                 return;
             }
+            gps = new GpsInfo(getApplicationContext());
 
             if (gps.isGetLocation()) {
                 Log.e("GG","GGGGGETTTT");
@@ -124,12 +125,13 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     JSONObject pos =(JSONObject)one.get("position");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
                     //_map.addMarker(new MarkerOptions().position(position).icon("BITMAP ICON!!!!!"))
-                    _map.addMarker(new MarkerOptions().position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromAsset(String.valueOf(R.mipmap.cat)))); //????
+                    _map.addMarker(new MarkerOptions().position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromAsset(String.valueOf(R.mipmap.cat))));
+                    //@@@@ 이미지  whichCat으로 각각 고양이 이미지 가져와야할듯!! @@@@
                     _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
                             Log.e("MARKER", "MARKER CLICK EVENT");
-                            // 그 마커 클릭 시 카메라 뷰로 인텐트 넘어감 //
+                            // 그 마커(고양이 이미지) 클릭 시 카메라 뷰로 인텐트 넘어감 //
                             Intent intent = new Intent(MapPane.this,CameraView.class);
                             startActivity(intent);
                             return true;
