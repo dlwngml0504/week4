@@ -17,8 +17,6 @@
         android:required="true" />
     <uses-feature android:name="android.hardware.camera2.full" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -43,8 +41,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <activity android:name=".CameraView" />
-        <activity android:name=".Store"></activity>
+        <activity android:name=".MyInfo"></activity>
     </application>
 
 </manifest>

@@ -47,6 +47,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
     private GpsInfo gps;
     double latitude, longitude;
     private int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION=100;
+
     GoogleMap _map;
 
     private TimerTask second;
