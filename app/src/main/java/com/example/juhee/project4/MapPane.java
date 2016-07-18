@@ -65,8 +65,6 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-
             return;
         }
 
@@ -90,7 +88,8 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                 Log.e("Hi","iiiiiiiiiiiiiiiiiiii");
                 return;
             }
-            gps = new GpsInfo(getApplicationContext());
+            //gps = new GpsInfo(getApplicationContext());
+            gps = new GpsInfo(MapPane.this);
 
             if (gps.isGetLocation()) {
                 Log.e("GG","GGGGGETTTT");
