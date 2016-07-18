@@ -13,6 +13,8 @@ import android.location.LocationManager;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -69,8 +73,32 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
             return;
         }
 
+        ImageButton rank = (ImageButton) findViewById(R.id.rank);
+        rank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
+        ImageButton store = (ImageButton) findViewById(R.id.store);
+        store.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(getApplicationContext(),Store.class);
+                startActivity(intent1);
+            }
+        });
 
+        ImageButton myinfo = (ImageButton) findViewById(R.id.myinfo);
+        myinfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         SupportMapFragment mapFragment = (SupportMapFragment)this.getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapPane.this);
@@ -80,20 +108,16 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
         @Override
         public void onMapReady (GoogleMap map){
 
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.e("MapPane","13131313131313");
-            } Log.e("Hi","HHHHHHHHHHHHHHHHHHHH");
             _map = map;
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.e("Hi","iiiiiiiiiiiiiiiiiiii");
+                Log.e("MapPane","onMapReady permission deny");
                 return;
             }
             //gps = new GpsInfo(getApplicationContext());
             gps = new GpsInfo(MapPane.this);
 
             if (gps.isGetLocation()) {
-                Log.e("GG","GGGGGETTTT");
+                Log.e("Mappane","gps.isGetLocation() is true");
                 latitude = gps.getLatitude();
                 longitude = gps.getLongitude();
                 LatLng now = new LatLng(latitude,longitude);

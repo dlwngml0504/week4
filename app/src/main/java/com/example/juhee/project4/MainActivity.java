@@ -106,15 +106,13 @@ public class MainActivity extends AppCompatActivity{
                                 });
 
 
-                                /*try {
+                                try {
                                     Intent intent = new Intent(MainActivity.this,MapPane.class);
                                     intent.putExtra("ID",response.getJSONObject().getString("id").toString());
                                     startActivity(intent);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                }*/
-                                Intent intent = new Intent(MainActivity.this,MapPane.class);
-                                startActivity(intent);
+                                }
                             }
                         }
                 ).executeAsync();
