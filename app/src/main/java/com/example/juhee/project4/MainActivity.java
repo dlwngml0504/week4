@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity{
 
     public Socket mSocket;
     final String SERVER_IP = "52.78.66.95";
-    final String SERVER_PORT = ":12345";
+    final String SERVER_PORT = ":8124";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +77,42 @@ public class MainActivity extends AppCompatActivity{
                         new GraphRequest.Callback() {
                             public void onCompleted(GraphResponse response) {
                                  /* handle the result */
-                                // {Response:  responseCode: 200, graphObject: {"name":"Lee  Ju Hee","id":"991091207678109"}, error: null}
-                                Toast.makeText(MainActivity.this, "Loading.... Please wait", Toast.LENGTH_LONG).show();
+                                // {Response:  responseCode: 200, graphObject: {"name":"Lee  Ju Hee","id":"991091207678109"}, error: null}\
+
+
+
+                                // Send Login information to Server using Socket
+                                try {
+                                    mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+                                    mSocket.off("init");
+                                    mSocket.off("initRes");
+                                } catch (Exception e) {}
+                                mSocket.connect();
+
+                                mSocket.emit("init",response.getJSONObject());
+
+                                // Get response
+                                mSocket.on("initRes", new Emitter.Listener() {
+                                    @Override
+                                    public void call(final Object... args){
+                                        Log.e("HHH","HearBeat Response");
+                                        JSONArray jsonRes = (JSONArray) args[0];
+                            /*
+                            @@@@@@
+                            유저 정보창 : 가지고있는 돈, 아이템, 친밀도 등... 적절한데에 띄위주기...
+                            @@@@@@@@
+                             */
+                                    }
+                                });
+
+
+                                /*try {
+                                    Intent intent = new Intent(MainActivity.this,MapPane.class);
+                                    intent.putExtra("ID",response.getJSONObject().getString("id").toString());
+                                    startActivity(intent);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }*/
                                 Intent intent = new Intent(MainActivity.this,MapPane.class);
                                 startActivity(intent);
                             }
@@ -164,36 +198,6 @@ public class MainActivity extends AppCompatActivity{
 
                     // permission was granted, yay! do the
                     // calendar task you need to do.
-
-                    //@@@@ id받아오기 ㅋㅋㅋㅋ @@@@
-                     String loginID = "";
-
-                    mSocket.off("init"); mSocket.off("initRes");
-
-                    // Send Login information to Server using Socket
-                    try {
-                        mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
-                    } catch (Exception e) {}
-                    mSocket.connect();
-                    try {
-                        mSocket.emit("init",new JSONObject().put("ID",loginID));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Get response
-                    mSocket.on("initRes", new Emitter.Listener() {
-                        @Override
-                        public void call(final Object... args){
-                            Log.e("HHH","HearBeat Response");
-                            JSONArray jsonRes = (JSONArray) args[0];
-                            /*
-                            @@@@@@
-                            유저 정보창 : 가지고있는 돈, 아이템, 친밀도 등... 적절한데에 띄위주기...
-                            @@@@@@@@
-                             */
-                        }
-                    });
 
 
                 } else {
