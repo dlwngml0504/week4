@@ -22,7 +22,7 @@
 
 
     <ImageButton
-        android:id="@+id/fab"
+        android:id="@+id/rank"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|end"
@@ -37,9 +37,8 @@
         android:layout_height="50dp"
         android:layout_gravity="bottom|end"
         android:background="@drawable/store"
-        android:layout_marginStart="42dp"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/fab" />
+        android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:id="@+id/myinfo"
