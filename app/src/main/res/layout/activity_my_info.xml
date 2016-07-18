@@ -93,8 +93,17 @@
         android:layout_below="@+id/rankBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listView"
+        android:id="@+id/userRanking"
         android:layout_alignParentStart="true" />
+
+    <ListView
+        android:background="@drawable/back"
+        android:layout_below="@+id/rankBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userItem"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible"/>
 
 
 

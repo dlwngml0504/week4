@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
+
                                 // Send Login information to Server using Socket
                                 try {
                                     mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
@@ -91,12 +92,13 @@ public class MainActivity extends AppCompatActivity{
 
                                 mSocket.emit("init",response.getJSONObject());
 
+
                                 // Get response
                                 mSocket.on("initRes", new Emitter.Listener() {
                                     @Override
                                     public void call(final Object... args){
                                         Log.e("HHH","HearBeat Response");
-                                        JSONArray jsonRes = (JSONArray) args[0];
+                                        JSONObject jsonRes = (JSONObject) args[0];
                             /*
                             @@@@@@
                             유저 정보창 : 가지고있는 돈, 아이템, 친밀도 등... 적절한데에 띄위주기...

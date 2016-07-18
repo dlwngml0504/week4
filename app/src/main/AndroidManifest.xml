@@ -41,7 +41,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
+        <activity android:name=".Store" />
         <activity android:name=".CameraView" />
         <activity android:name=".MyInfo"></activity>
     </application>
