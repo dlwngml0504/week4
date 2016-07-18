@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/mItemImage"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id ="@+id/mItemName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_marginLeft="10dp"
+        android:text="ItemName"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/mItemImage" />
+
+    <TextView
+        android:id="@+id/mItemCatalogue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="ItemCatalog"
+        android:layout_alignBottom="@+id/mItemImage"
+        android:layout_alignStart="@+id/mItemName" />
+
+    <TextView
+        android:id ="@+id/mItemCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#F51C1C"
+        android:text="ItemName"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/mBuy"
+        android:layout_marginRight="7dp"/>
+
+    <Button
+        android:id="@+id/mBuy"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignTop="@+id/mItemName"
+        android:layout_alignParentEnd="true"
+        android:text="Buy"/>
+</RelativeLayout>

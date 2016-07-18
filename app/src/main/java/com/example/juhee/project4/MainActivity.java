@@ -96,7 +96,8 @@ public class MainActivity extends AppCompatActivity{
                                     @Override
                                     public void call(final Object... args){
                                         Log.e("HHH","HearBeat Response");
-                                        JSONArray jsonRes = (JSONArray) args[0];
+                                        JSONObject jsonRes = (JSONObject) args[0];
+                                        Log.e("jsonRes",jsonRes.toString());
                             /*
                             @@@@@@
                             유저 정보창 : 가지고있는 돈, 아이템, 친밀도 등... 적절한데에 띄위주기...
@@ -106,13 +107,9 @@ public class MainActivity extends AppCompatActivity{
                                 });
 
 
-                                try {
-                                    Intent intent = new Intent(MainActivity.this,MapPane.class);
-                                    intent.putExtra("ID",response.getJSONObject().getString("id").toString());
-                                    startActivity(intent);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                                Intent intent = new Intent(MainActivity.this,MapPane.class);
+                                intent.putExtra("userinfo",response.getJSONObject().toString());
+                                startActivity(intent);
                             }
                         }
                 ).executeAsync();

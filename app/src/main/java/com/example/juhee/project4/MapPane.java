@@ -61,7 +61,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
         setContentView(R.layout.map_activity);
         mContext = this;
 
-
+        final Intent intent = getIntent();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.e("MapPane","********************");
@@ -86,6 +86,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(getApplicationContext(),Store.class);
+                intent1.putExtra("userinfo",intent.getStringExtra("userinfo"));
                 startActivity(intent1);
             }
         });
