@@ -81,17 +81,17 @@ public class GpsInfo extends Service implements android.location.LocationListene
             // 현재 네트워크 상태 값 알아오기
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            Log.e("Gpsinfo", String.valueOf(isNetworkEnabled));
+
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // GPS 와 네트워크사용이 가능하지 않을때 소스 구현
             } else {
-                Log.e("GPSINFO","ELSE");
+
                 this.isGetLocation = true;
                 // 네트워크 정보로 부터 위치값 가져오기
                 if (isNetworkEnabled) {
-                    Log.e("GPSINFO","+++++++++++++++");
+
                     if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        Log.e("GPSINFO","---------------");
+
                         return new Location("-1");
                     }
                     locationManager.requestLocationUpdates(
@@ -106,9 +106,7 @@ public class GpsInfo extends Service implements android.location.LocationListene
                             // 위도 경도 저장
                             lat = location.getLatitude();
                             lon = location.getLongitude();
-                            Log.e("GpsInfo latitude", String.valueOf(lat));
-                            Log.e("GpsInfo longtitude", String.valueOf(lon));
-                            Log.e("Bearing",String.valueOf(location.getBearing()));
+
                         }
                     }
                 }
@@ -144,7 +142,7 @@ public class GpsInfo extends Service implements android.location.LocationListene
     public void stopUsingGPS() {
         if (locationManager != null) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.e("GpsInfo","Null@@@@@@@@@");
+
                 return ;
             }
             locationManager.removeUpdates(GpsInfo.this);
