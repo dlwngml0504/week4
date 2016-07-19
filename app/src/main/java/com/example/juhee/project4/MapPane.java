@@ -162,8 +162,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     catName = one.getString("catName");
                     JSONObject pos =(JSONObject)one.get("catlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
-                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("cat","drawable",getPackageName()
-                    ))));
+                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("caticon","drawable",getPackageName()))));
 
 
                     _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -183,8 +182,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     userId = one.getString("userid");
                     JSONObject pos =(JSONObject)one.get("userlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
-                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("cat","drawable",getPackageName()
-                    ))));
+                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("caticon","drawable",getPackageName() ))));
                     markers.add(marker);
                 }
 

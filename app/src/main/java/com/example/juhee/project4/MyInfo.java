@@ -32,7 +32,7 @@ public class MyInfo extends AppCompatActivity {
     ListView mMyItems;
     JSONArray userItem;
     JSONArray userRank;
-
+    JSONObject userInfo;
     userRankingAdapter userRankingAdapter;
     userShoplistAdapter userShoppingAdapter;
 
@@ -61,6 +61,18 @@ public class MyInfo extends AppCompatActivity {
         myRanking.setBackgroundColor(getResources().getColor(selectedBtn));
         myItems.setBackgroundColor(getResources().getColor(unselectedBtn));
 
+        final Handler handler0 = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+
+                try {
+                    mMyName.setText(userInfo.getString("name"));
+                    mMyMoney.setText(userInfo.getString("money"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
         final Handler handler1 = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -76,8 +88,6 @@ public class MyInfo extends AppCompatActivity {
 
                         userRankingAdapter.addItem(photo,name,rank);
                     }
-
-
                     mMyRanking.setAdapter(userRankingAdapter);
                     ListViewRankClickListener listViewRankClickListener = new ListViewRankClickListener();
                     mMyRanking.setOnItemClickListener(listViewRankClickListener);
@@ -94,7 +104,6 @@ public class MyInfo extends AppCompatActivity {
                 try {
                     //jsonRes = new JSONArray(msg);
                     userShoppingAdapter = new userShoplistAdapter(MyInfo.this,intent.getStringExtra("userinfo"));
-                    mMyItems = (ListView)findViewById(R.id.storeList);
                     mMyItems.setAdapter(userShoppingAdapter);
                     for (int i =0; i<userItem.length();i++) {
                         userShoppingAdapter.add(userItem.getJSONObject(i).toString());
@@ -105,7 +114,6 @@ public class MyInfo extends AppCompatActivity {
                 }
             }
         };
-
 
         // 먼저 소켓으로 정보 다 받아옴
         try {
@@ -122,7 +130,7 @@ public class MyInfo extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        userRankingAdapter = new userRankingAdapter(getApplicationContext());//???
+        userRankingAdapter = new userRankingAdapter(getApplicationContext());
         // Get response
         mSocket.on("userInfoRes", new Emitter.Listener() {
             /*
@@ -134,25 +142,26 @@ public class MyInfo extends AppCompatActivity {
                             */
             @Override
             public void call(final Object... args){
+                Log.e("userInfo Response",args[0].toString());
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
-                        Log.e("userInfo Response",args[0].toString());
+
                         JSONObject jsonRes = (JSONObject) args[0];
+                        Log.e("LL",jsonRes.toString());
                         try {
                             // response를 받아옴
-                            JSONObject userInfo = (JSONObject)jsonRes.get("userInfo");
+                            userInfo = (JSONObject)jsonRes.get("userInfo");
                             userRank = (JSONArray)jsonRes.get("userRank");
                             userItem = (JSONArray)jsonRes.get("userItem");
 
                             // user information 우선 넣음
-
-                            mMyName.setText(userInfo.getString("name"));
-                            mMyMoney.setText(userInfo.getString("money"));
+                            Message msg0 = handler0.obtainMessage();
+                            handler0.sendMessage(msg0);
 
                             // 유저 랭킹 어댑터로 리스트뷰에 넣기
-                            Message msg = handler1.obtainMessage();
-                            handler1.sendMessage(msg);
+                            Message msg1 = handler1.obtainMessage();
+                            handler1.sendMessage(msg1);
 
 
                             // 아이템 리스트 어댑터로 리스트 뷰에 넣기
