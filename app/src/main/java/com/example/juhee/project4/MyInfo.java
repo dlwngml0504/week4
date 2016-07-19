@@ -2,6 +2,8 @@ package com.example.juhee.project4;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +30,8 @@ public class MyInfo extends AppCompatActivity {
     TextView mMyMoney;
     ListView mMyRanking;
     ListView mMyItems;
+    JSONArray userItem;
+    JSONArray userRank;
 
     userRankingAdapter userRankingAdapter;
     userShoplistAdapter userShoppingAdapter;
@@ -42,7 +46,7 @@ public class MyInfo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_info);
-        Intent intent = this.getIntent();
+        final Intent intent = this.getIntent();
         id = intent.getStringExtra("id");
 
         mMyName = (TextView)findViewById(R.id.userName);
@@ -56,6 +60,52 @@ public class MyInfo extends AppCompatActivity {
         //@@@최초는 랭킹 버튼이 선택된 상태여야함
         myRanking.setBackgroundColor(getResources().getColor(selectedBtn));
         myItems.setBackgroundColor(getResources().getColor(unselectedBtn));
+
+        final Handler handler1 = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                try {
+
+                    for ( int i = 0; i<userRank.length(); i++) {
+                        String photo, name, rank;
+                        JSONObject one = userRank.getJSONObject(i);
+                        //photo = one.getString("")
+                        photo = null;
+                        name = one.getString("catname");
+                        rank = one.getString("myrank");
+
+                        userRankingAdapter.addItem(photo,name,rank);
+                    }
+
+
+                    mMyRanking.setAdapter(userRankingAdapter);
+                    ListViewRankClickListener listViewRankClickListener = new ListViewRankClickListener();
+                    mMyRanking.setOnItemClickListener(listViewRankClickListener);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        final Handler handler2 = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                Log.e("handler",userItem.toString());
+                try {
+                    //jsonRes = new JSONArray(msg);
+                    userShoppingAdapter = new userShoplistAdapter(MyInfo.this,intent.getStringExtra("userinfo"));
+                    mMyItems = (ListView)findViewById(R.id.storeList);
+                    mMyItems.setAdapter(userShoppingAdapter);
+                    for (int i =0; i<userItem.length();i++) {
+                        userShoppingAdapter.add(userItem.getJSONObject(i).toString());
+                        Log.e("Nyinfo", userItem.getJSONObject(i).toString());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
 
         // 먼저 소켓으로 정보 다 받아옴
         try {
@@ -84,52 +134,39 @@ public class MyInfo extends AppCompatActivity {
                             */
             @Override
             public void call(final Object... args){
-                Log.e("HHH","userInfo Response");
-                JSONObject jsonRes = (JSONObject) args[0];
-                try {
-                    // response를 받아옴
-                    JSONObject userInfo = (JSONObject)jsonRes.get("userInfo");
-                    JSONArray userRank = (JSONArray)jsonRes.get("userRank");
-                    JSONArray userItem = (JSONArray)jsonRes.get("userItem");
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        Log.e("userInfo Response",args[0].toString());
+                        JSONObject jsonRes = (JSONObject) args[0];
+                        try {
+                            // response를 받아옴
+                            JSONObject userInfo = (JSONObject)jsonRes.get("userInfo");
+                            userRank = (JSONArray)jsonRes.get("userRank");
+                            userItem = (JSONArray)jsonRes.get("userItem");
 
-                    // user information 우선 넣음
+                            // user information 우선 넣음
 
-                    mMyName.setText(userInfo.getString("name"));
-                    mMyMoney.setText(userInfo.getString("money"));
+                            mMyName.setText(userInfo.getString("name"));
+                            mMyMoney.setText(userInfo.getString("money"));
 
-                    // 유저 랭킹 어댑터로 리스트뷰에 넣기
+                            // 유저 랭킹 어댑터로 리스트뷰에 넣기
+                            Message msg = handler1.obtainMessage();
+                            handler1.sendMessage(msg);
 
-                    for ( int i = 0; i<userRank.length(); i++) {
-                        String photo, name, rank;
-                        JSONObject one = userRank.getJSONObject(i);
-                        //photo = one.getString("")
-                        photo = null;
-                        name = one.getString("catname");
-                        rank = one.getString("myrank");
 
-                        userRankingAdapter.addItem(photo,name,rank);
+                            // 아이템 리스트 어댑터로 리스트 뷰에 넣기
+                            Message msg2 = handler2.obtainMessage();
+                            handler2.sendMessage(msg2);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+                };
+                thread.start();
 
-
-                    mMyRanking.setAdapter(userRankingAdapter);
-                    ListViewRankClickListener listViewRankClickListener = new ListViewRankClickListener();
-                    mMyRanking.setOnItemClickListener(listViewRankClickListener);
-
-
-                    // 아이템 리스트 어댑터로 리스트 뷰에 넣기
-
-                    userShoppingAdapter = new userShoplistAdapter(MyInfo.this,id);
-                    mMyItems = (ListView)findViewById(R.id.storeList);
-                    mMyItems.setAdapter(userShoppingAdapter);
-                    for (int i =0; i<userItem.length();i++) {
-                        userShoppingAdapter.add(userItem.getJSONObject(i).toString());
-                        Log.e("Store",userItem.getJSONObject(i).toString());
-                    }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
 
             }
@@ -158,35 +195,6 @@ public class MyInfo extends AppCompatActivity {
                 mMyRanking.setVisibility(View.INVISIBLE);
                 myItems.setBackgroundColor(getResources().getColor(selectedBtn));
                 myRanking.setBackgroundColor(getResources().getColor(unselectedBtn));
-
-
-                try {
-                    JSONArray userItem2 = new JSONArray();
-                    JSONObject jo2 = new JSONObject();
-                    jo2.put("itemID",1);
-                    jo2.put("itemName","Dried");
-                    jo2.put("itemcost",3000);
-                    jo2.put("drawable","snackdried");
-                    jo2.put("efficacy",3);
-                    jo2.put("itemcatalog","toy");
-                    userItem2.put(jo2);
-                    jo2 = new JSONObject();
-                    jo2.put("itemID",2);
-                    jo2.put("itemName","House");
-                    jo2.put("itemcost",5000);
-                    jo2.put("drawable","etchouse");
-                    jo2.put("efficacy",5);
-                    jo2.put("itemcatalog","etc");
-                    userItem2.put(jo2);
-                    userShoppingAdapter = new userShoplistAdapter(MyInfo.this,id);
-                    mMyItems.setAdapter(userShoppingAdapter);
-                    for (int i =0; i<userItem2.length();i++) {
-                        userShoppingAdapter.add(userItem2.getJSONObject(i).toString());
-                        Log.e("Store",userItem2.getJSONObject(i).toString());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
         });
 

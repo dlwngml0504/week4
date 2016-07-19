@@ -30,6 +30,7 @@ public class Store extends AppCompatActivity {
     final String SERVER_PORT = ":8124";
     private StoreAdapter m_Adapter;
     private ListView m_ListView;
+    JSONArray jsonRes = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,7 @@ public class Store extends AppCompatActivity {
         final Intent intent = getIntent();
 
 
-/*        final Handler handler = new Handler(){
+        final Handler handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 Log.e("handler",jsonRes.toString());
@@ -60,7 +61,7 @@ public class Store extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        };*/
+        };
 
         if (btn!=null) {
             btn.setOnClickListener(new View.OnClickListener(){
@@ -98,51 +99,16 @@ public class Store extends AppCompatActivity {
                                 Thread thread = new Thread() {
                                     @Override
                                     public void run() {
-                                        try {
-                                            JSONArray jsonRes = (JSONArray) args[0];
-                                            Log.e("Store",jsonRes.toString());
-                                            m_Adapter = new StoreAdapter(Store.this,intent.getStringExtra("userinfo"));
-                                            m_ListView = (ListView)findViewById(R.id.storeList);
-                                            m_ListView.setAdapter(m_Adapter);
-                                            for (int i =0; i<jsonRes.length();i++) {
-                                                Log.e("Store",jsonRes.getJSONObject(i).toString());
-                                                m_Adapter.add(jsonRes.getJSONObject(i).toString());
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                        jsonRes = (JSONArray) args[0];
+                                        Log.e("Store",jsonRes.toString());
+                                        Message msg = handler.obtainMessage();
+                                        handler.sendMessage(msg);
                                     }
                                 };
                                 thread.start();
                             }
                         });
 
-                        /*JSONArray jsonRes = new JSONArray();
-                        JSONObject jo2 = new JSONObject();
-                        jo2.put("itemID",1);
-                        jo2.put("itemName","Dried");
-                        jo2.put("itemcost",3000);
-                        jo2.put("drawable","snackdried");
-                        jo2.put("efficacy",3);
-                        jo2.put("itemcatalog","toy");
-                        jsonRes.put(jo2);
-                        jo2 = new JSONObject();
-                        jo2.put("itemID",2);
-                        jo2.put("itemName","House");
-                        jo2.put("itemcost",5000);
-                        jo2.put("drawable","etchouse");
-                        jo2.put("efficacy",5);
-                        jo2.put("itemcatalog","etc");
-                        jsonRes.put(jo2);
-
-                        Log.e("Store",jsonRes.toString());
-                        m_Adapter = new StoreAdapter(Store.this,intent.getStringExtra("userinfo"));
-                        m_ListView = (ListView)findViewById(R.id.storeList);
-                        m_ListView.setAdapter(m_Adapter);
-                        for (int i =0; i<jsonRes.length();i++) {
-                            m_Adapter.add(jsonRes.getJSONObject(i).toString());
-                            Log.e("Store",jsonRes.getJSONObject(i).toString());
-                        }*/
                     }catch (JSONException e) {
                         e.printStackTrace();
                     }
