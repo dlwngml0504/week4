@@ -163,7 +163,6 @@ public class MyInfo extends AppCompatActivity {
                             Message msg1 = handler1.obtainMessage();
                             handler1.sendMessage(msg1);
 
-
                             // 아이템 리스트 어댑터로 리스트 뷰에 넣기
                             Message msg2 = handler2.obtainMessage();
                             handler2.sendMessage(msg2);
@@ -206,7 +205,6 @@ public class MyInfo extends AppCompatActivity {
                 myRanking.setBackgroundColor(getResources().getColor(unselectedBtn));
             }
         });
-
 
 
 

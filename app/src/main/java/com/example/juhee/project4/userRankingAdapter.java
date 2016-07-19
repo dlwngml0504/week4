@@ -62,7 +62,7 @@ public class userRankingAdapter extends BaseAdapter {
         //사진 어떻게 할지 미정
         // cat name을 파일명으로 하여 드로어블에서 뽑아온다.
 
-        holder.mCatPhoto.setImageResource(mContext.getResources().getIdentifier(mData.mCatName,"drawable",mContext.getPackageName()));
+        holder.mCatPhoto.setImageResource(mContext.getResources().getIdentifier("caticon","drawable",mContext.getPackageName()));
         holder.mCatName.setText(mData.mCatName);
         holder.mCatMyRank.setText(mData.mCatMyRank);
 
