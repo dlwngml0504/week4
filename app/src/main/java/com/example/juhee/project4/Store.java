@@ -30,7 +30,6 @@ public class Store extends AppCompatActivity {
     final String SERVER_PORT = ":8124";
     private StoreAdapter m_Adapter;
     private ListView m_ListView;
-    private JSONArray jsonRes = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +43,10 @@ public class Store extends AppCompatActivity {
         final Intent intent = getIntent();
 
 
-        final Handler handler = new Handler(){
+/*        final Handler handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                Log.e("handler",msg.toString());
+                Log.e("handler",jsonRes.toString());
                 try {
                     //jsonRes = new JSONArray(msg);
                     m_Adapter = new StoreAdapter(Store.this,intent.getStringExtra("userinfo"));
@@ -61,7 +60,7 @@ public class Store extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        };
+        };*/
 
         if (btn!=null) {
             btn.setOnClickListener(new View.OnClickListener(){
@@ -95,24 +94,26 @@ public class Store extends AppCompatActivity {
                         mSocket.on("storeRes", new Emitter.Listener() {
                             @Override
                             public void call(final Object... args){
-                                /*Log.e("Store","Store Response"+args[0].toString());
-                                try {
-                                    JSONArray jsonRes = (JSONArray) args[0];
-                                    Log.e("Store",jsonRes.toString());
-                                    m_Adapter = new StoreAdapter(Store.this,intent.getStringExtra("userinfo"));
-                                    m_ListView = (ListView)findViewById(R.id.storeList);
-                                    m_ListView.setAdapter(m_Adapter);
-                                    for (int i =0; i<jsonRes.length();i++) {
-                                        Log.e("Store",jsonRes.getJSONObject(i).toString());
-                                        m_Adapter.add(jsonRes.getJSONObject(i).toString());
+                                Log.e("Store","Store Response"+args[0].toString());
+                                Thread thread = new Thread() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            JSONArray jsonRes = (JSONArray) args[0];
+                                            Log.e("Store",jsonRes.toString());
+                                            m_Adapter = new StoreAdapter(Store.this,intent.getStringExtra("userinfo"));
+                                            m_ListView = (ListView)findViewById(R.id.storeList);
+                                            m_ListView.setAdapter(m_Adapter);
+                                            for (int i =0; i<jsonRes.length();i++) {
+                                                Log.e("Store",jsonRes.getJSONObject(i).toString());
+                                                m_Adapter.add(jsonRes.getJSONObject(i).toString());
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }*/
-                                jsonRes = (JSONArray) args[0];
-                                Log.e("Store",jsonRes.toString());
-                                Message msg = handler.obtainMessage();
-                                handler.handleMessage(msg);
+                                };
+                                thread.start();
                             }
                         });
 

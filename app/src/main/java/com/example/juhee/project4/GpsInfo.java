@@ -50,6 +50,7 @@ public class GpsInfo extends Service implements android.location.LocationListene
     Location location;
     double lat; // 위도
     double lon; // 경도
+    int i = 0;
 
     // 최소 GPS 정보 업데이트 거리 2미터
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 2;
@@ -255,6 +256,7 @@ public class GpsInfo extends Service implements android.location.LocationListene
 
                 jsonRes= (JSONArray) args[0];
                 Log.e("**",jsonRes.toString());
+                i = 1;
                /*
                 @@@@@@
                 받은걸로 지도에 띄우기,
@@ -275,11 +277,12 @@ public class GpsInfo extends Service implements android.location.LocationListene
 
             }
         });
+
+        while (i==0) {
+
+        }
         ((MapPane)MapPane.mContext).pickMarkers(jsonRes);
-
-
-
-
+        i = 0;
     }
 
     @Override
