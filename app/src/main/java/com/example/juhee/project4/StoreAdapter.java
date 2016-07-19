@@ -13,11 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,12 +35,19 @@ import java.util.ArrayList;
 public class StoreAdapter extends BaseAdapter {
     private ArrayList<String> m_List;
     private Context m_Context;
-    private String buyer;
+    private JSONObject buyer;
+    public Socket mSocket;
+    final String SERVER_IP = "52.78.66.95";
+    final String SERVER_PORT = ":8124";
 
     public StoreAdapter(Context context,String user) {
         m_List = new ArrayList<String>();
         m_Context = context;
-        buyer = user;
+        try {
+            buyer = new JSONObject(user);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
     @Override
     public int getCount() {
@@ -53,7 +65,7 @@ public class StoreAdapter extends BaseAdapter {
         m_List.add(_msg);
     }
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final int pos = position;
         final Context context = parent.getContext();
 
@@ -66,15 +78,13 @@ public class StoreAdapter extends BaseAdapter {
             TextView mItemCatalogue = (TextView) convertView.findViewById(R.id.mItemCatalogue);
             TextView mItemCost = (TextView) convertView.findViewById(R.id.mItemCost);
             ImageView mItemImage = (ImageView) convertView.findViewById(R.id.mItemImage);
-            String musicinfo =  m_List.get(position);
+            String iteminfo =  m_List.get(position);
             try {
-                JSONObject jo = new JSONObject(musicinfo);
-                mItemName.setText(jo.getString("itemname"));
-                mItemCatalogue.setText(jo.getString("itemcatalog"));
+                JSONObject jo = new JSONObject(iteminfo);
+                mItemName.setText(jo.getString("itemName")+"("+jo.getString("itemcatalog")+")");
+                mItemCatalogue.setText("친밀도 상승 +"+jo.getString("efficacy"));
                 mItemCost.setText("$"+jo.getString("itemcost"));
-                Log.e("StoreAdapter",jo.getString("drawable"));
                 mItemImage.setImageResource(m_Context.getResources().getIdentifier(jo.getString("drawable"),"drawable",m_Context.getPackageName()));
-                //mItemImage.setImageDrawable(jo.getString("drawable")
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -84,16 +94,10 @@ public class StoreAdapter extends BaseAdapter {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final CharSequence[] items = {"1", "2", "3"};
-
+                    final EditText input = new EditText(m_Context);
                     AlertDialog.Builder builder = new AlertDialog.Builder(m_Context);
                     builder.setTitle("수량을 선택하세요")
-                            .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener(){
-                                // 목록 클릭시 설정
-                                public void onClick(DialogInterface dialog, int index){
-                                    Toast.makeText(m_Context, items[index], Toast.LENGTH_SHORT).show();
-                                }
-                            })
+                            .setView(input)
                             .setCancelable(false)
                             .setNegativeButton("취소", new DialogInterface.OnClickListener(){
                                 public void onClick(DialogInterface dialog, int whichButton){
@@ -102,9 +106,26 @@ public class StoreAdapter extends BaseAdapter {
                             })
                             .setPositiveButton("확인", new DialogInterface.OnClickListener(){
                                 public void onClick(DialogInterface dialog, int whichButton){
+                                    String value = input.getText().toString();
+                                    try {
+                                        mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+                                        mSocket.off("buy");
+                                    } catch (Exception e) {}
+                                    mSocket.connect();
+
+                                    JSONObject jo = new JSONObject();
+                                    try {
+                                        jo.put("quantity",value);
+                                        jo.put("userid",buyer.getString("userid"));
+                                        //jo.put("iteminfo",);
+                                        Log.e("storeadapter_quantity",value);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    mSocket.emit("buy",jo);
                                     dialog.cancel();
                                 }
-                            });;
+                            });
 
                     AlertDialog dialog = builder.create();
                     dialog.show();
@@ -118,6 +139,7 @@ public class StoreAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     Log.e("StoreAdapter","hehe");
+                    String iteminfo2 =  m_List.get(position);
                     AlertDialog.Builder builder = new AlertDialog.Builder(m_Context);
 
                     builder.setTitle("Item 효과")

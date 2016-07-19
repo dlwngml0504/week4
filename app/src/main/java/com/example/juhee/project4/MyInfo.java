@@ -30,6 +30,7 @@ public class MyInfo extends AppCompatActivity {
     ListView mMyItems;
 
     userRankingAdapter userRankingAdapter;
+    userShoplistAdapter userShoppingAdapter;
 
     public Socket mSocket;
     final String SERVER_IP = "52.78.66.95";
@@ -117,7 +118,13 @@ public class MyInfo extends AppCompatActivity {
 
                     // 아이템 리스트 어댑터로 리스트 뷰에 넣기
 
-
+                    userShoppingAdapter = new userShoplistAdapter(MyInfo.this,id);
+                    mMyItems = (ListView)findViewById(R.id.storeList);
+                    mMyItems.setAdapter(userShoppingAdapter);
+                    for (int i =0; i<userItem.length();i++) {
+                        userShoppingAdapter.add(userItem.getJSONObject(i).toString());
+                        Log.e("Store",userItem.getJSONObject(i).toString());
+                    }
 
 
                 } catch (JSONException e) {
@@ -152,6 +159,34 @@ public class MyInfo extends AppCompatActivity {
                 myItems.setBackgroundColor(getResources().getColor(selectedBtn));
                 myRanking.setBackgroundColor(getResources().getColor(unselectedBtn));
 
+
+                try {
+                    JSONArray userItem2 = new JSONArray();
+                    JSONObject jo2 = new JSONObject();
+                    jo2.put("itemID",1);
+                    jo2.put("itemName","Dried");
+                    jo2.put("itemcost",3000);
+                    jo2.put("drawable","snackdried");
+                    jo2.put("efficacy",3);
+                    jo2.put("itemcatalog","toy");
+                    userItem2.put(jo2);
+                    jo2 = new JSONObject();
+                    jo2.put("itemID",2);
+                    jo2.put("itemName","House");
+                    jo2.put("itemcost",5000);
+                    jo2.put("drawable","etchouse");
+                    jo2.put("efficacy",5);
+                    jo2.put("itemcatalog","etc");
+                    userItem2.put(jo2);
+                    userShoppingAdapter = new userShoplistAdapter(MyInfo.this,id);
+                    mMyItems.setAdapter(userShoppingAdapter);
+                    for (int i =0; i<userItem2.length();i++) {
+                        userShoppingAdapter.add(userItem2.getJSONObject(i).toString());
+                        Log.e("Store",userItem2.getJSONObject(i).toString());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
