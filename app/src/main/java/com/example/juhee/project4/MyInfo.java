@@ -60,7 +60,7 @@ public class MyInfo extends AppCompatActivity {
         try {
             mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
             mSocket.off("userInfo");
-            mSocket.off("userInfo");
+            mSocket.off("userInfoRes");
         } catch (Exception e) {}
         mSocket.connect();
 
@@ -71,7 +71,7 @@ public class MyInfo extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        userRankingAdapter = new userRankingAdapter(getApplicationContext());//???
         // Get response
         mSocket.on("userInfoRes", new Emitter.Listener() {
             /*
@@ -97,7 +97,7 @@ public class MyInfo extends AppCompatActivity {
                     mMyMoney.setText(userInfo.getString("money"));
 
                     // 유저 랭킹 어댑터로 리스트뷰에 넣기
-                    userRankingAdapter = new userRankingAdapter(getApplicationContext());//???
+
                     for ( int i = 0; i<userRank.length(); i++) {
                         String photo, name, rank;
                         JSONObject one = userRank.getJSONObject(i);
@@ -163,16 +163,16 @@ public class MyInfo extends AppCompatActivity {
         String  pn;
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            /*Intent intent = new Intent(getActivity(),PostDetail.class);
-//            Log.e("**","*************");
-            OnePost mData = PostViewAdapter.mListPost.get(position);
-            intent.putExtra("title",mData.mTitle);
-            intent.putExtra("writer",mData.mWriter);
-            intent.putExtra("contents",mData.mContents);
-            intent.putExtra("password",mData.mPassword);
-            intent.putExtra("keynum",mData.mKeyNum);
 
-            startActivity(intent);*/
+
+            Intent intent = new Intent(MyInfo.this,CatDetail.class);
+//            Log.e("**","*************");
+            OneRank mData =userRankingAdapter.mListRank.get(position);
+            intent.putExtra("photo",mData.mCatPhoto);
+            intent.putExtra("name",mData.mCatName);
+            intent.putExtra("id",id);
+
+            startActivity(intent);
 
         }
     }

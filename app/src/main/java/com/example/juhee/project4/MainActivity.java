@@ -79,9 +79,6 @@ public class MainActivity extends AppCompatActivity{
                                  /* handle the result */
                                 // {Response:  responseCode: 200, graphObject: {"name":"Lee  Ju Hee","id":"991091207678109"}, error: null}\
 
-
-
-
                                 // Send Login information to Server using Socket
                                 try {
                                     mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
@@ -92,17 +89,16 @@ public class MainActivity extends AppCompatActivity{
 
                                 mSocket.emit("init",response.getJSONObject());
 
-
                                 // Get response
                                 mSocket.on("initRes", new Emitter.Listener() {
                                     @Override
                                     public void call(final Object... args){
-                                        Log.e("HHH","HearBeat Response");
+
                                         JSONObject jsonRes = (JSONObject) args[0];
                                     }
                                 });
 
-
+                                Log.e("MMM",response.getJSONObject().toString());
                                 Intent intent = new Intent(MainActivity.this,MapPane.class);
                                 intent.putExtra("userinfo",response.getJSONObject().toString());
                                 startActivity(intent);
@@ -127,25 +123,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        Button mapButton = (Button)findViewById(R.id.mapBtn);
-        mapButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-
-                Intent intent = new Intent(MainActivity.this,MapPane.class);
-                startActivity(intent);
-            }
-        });
-
-        Button cameraButton = (Button)findViewById(R.id.cameraBtn);
-        cameraButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-
-                Intent intent = new Intent(MainActivity.this,CameraView.class);
-                startActivity(intent);
-            }
-        });
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)

@@ -26,6 +26,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class MapPane extends FragmentActivity implements OnMapReadyCallback {
 
@@ -39,14 +41,25 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
 
     GoogleMap _map;
 
-    private String id ;
+    public String id ;
+
+    public ArrayList<Marker> markers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_activity);
         mContext = this;
         final Intent intent = this.getIntent();
-        id = intent.getStringExtra("id");
+        try {
+            JSONObject obj = new JSONObject(intent.getStringExtra("userinfo"));
+            id = obj.getString("id");
+        } catch (JSONException e) {
+            Log.e("@@","JSON EXCEPTION");
+            e.printStackTrace();
+        }
+
+        markers = new ArrayList<Marker>();
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -62,8 +75,6 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
         myinfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Log.e("@@","@@@@@@@@@@@");
                 // Myinfo activity로 넘어감
                 Intent intent = new Intent(getApplicationContext(),MyInfo.class);
                 intent.putExtra("id",id);
@@ -120,30 +131,64 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
 
     public void pickMarkers(JSONArray jsonArray) {
 
+        // 있던 마커 삭제
+        for (int i = 0; i<markers.size(); i++){
+            markers.get(i).remove();
+        }
+/*
+
+        [{"_id":"578ddbf77a4028834bbed542",
+        "catName":"치즈냥이",
+        "catlocate":{"lon":127.362619,"lat":36.369349},
+        "catstatus":"Zzzzz",
+        "catAge":1,
+        "catRank":[]},
+        {"_id":"578ddcacdf9c29024c43b516",
+        "userid":"1781499372094324",
+        "userlocate":{"lat":36.3740728,"lon":127.3654031},
+        "userInfo":{"name":null,"money":5000},
+        "userRank":[],
+        "userItem":[]}]
+
+*/
+
         for (int i = 0; i<jsonArray.length(); i++ ){
             JSONObject one;
-            String whichCat;
+            String catName,userId;
             LatLng position;
             try {
                 one = jsonArray.getJSONObject(i);
-                if (one.get("kind") == "CAT"){
-                    whichCat = one.get("name").toString();
-                    JSONObject pos =(JSONObject)one.get("position");
+                if (one.has("catName")){
+                    catName = one.getString("catName");
+                    JSONObject pos =(JSONObject)one.get("catlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
-                    //_map.addMarker(new MarkerOptions().position(position).icon("BITMAP ICON!!!!!"))
-                    _map.addMarker(new MarkerOptions().position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromAsset(String.valueOf(R.mipmap.cat))));
-                    //@@@@ 이미지  whichCat으로 각각 고양이 이미지 가져와야할듯!! @@@@
+                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("cat","drawable",getPackageName()
+                    ))));
+
+
                     _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
 
                             // 그 마커(고양이 이미지) 클릭 시 카메라 뷰로 인텐트 넘어감 //
                             Intent intent = new Intent(MapPane.this,CameraView.class);
+                            //인텐트에서 뭐 넘겨줄지 !!
                             startActivity(intent);
                             return true;
                         }
                     });
+                    markers.add(marker);
+                } else {
+                    //case : Other users
+                    userId = one.getString("userid");
+                    JSONObject pos =(JSONObject)one.get("userlocate");
+                    position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
+                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("cat","drawable",getPackageName()
+                    ))));
+                    markers.add(marker);
                 }
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

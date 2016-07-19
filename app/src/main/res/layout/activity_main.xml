@@ -10,19 +10,6 @@
     android:background="#ffe6e6"
     tools:context="com.example.juhee.project4.MainActivity">
 
-    <Button
-        android:id="@+id/mapBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="google map"/>
-
-    <Button
-        android:id="@+id/cameraBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="camera map"
-        android:layout_below="@+id/mapBtn"/>
-
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"

@@ -61,8 +61,9 @@ public class GpsInfo extends Service implements android.location.LocationListene
 
     public Socket mSocket;
     final String SERVER_IP = "52.78.66.95";
-    final String SERVER_PORT = ":12345";
+    final String SERVER_PORT = ":8124";
 
+    JSONArray jsonRes;
 
     public GpsInfo(Context context) {
         this.mContext = context;
@@ -77,7 +78,6 @@ public class GpsInfo extends Service implements android.location.LocationListene
             // GPS 정보 가져오기
             isGPSEnabled = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
-            Log.e("GpsInfo", String.valueOf(isGPSEnabled));
             // 현재 네트워크 상태 값 알아오기
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -208,56 +208,75 @@ public class GpsInfo extends Service implements android.location.LocationListene
     @Override
     public void onLocationChanged(Location location) {
 
-        JSONObject jsonObject = new JSONObject();
+        Log.e("LLL","LOCATION CHANGED");
+        final JSONObject jsonObject = new JSONObject();
 
 
         // get changed location
         location = getLocation();
 
+        String id = ((MapPane)MapPane.mContext).id;
+        Log.e("ID:",id);
         // put in jason object
+
         try {
+            jsonObject.put("id",id);
             jsonObject.put("lat",String.valueOf(location.getLatitude()));
             jsonObject.put("lon",String.valueOf(location.getLongitude()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+
        // Toast.makeText(mContext,"Location changed:"+location.toString(),Toast.LENGTH_SHORT).show();
 
-        ((MapPane)MapPane.mContext)._map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+        /*((MapPane)MapPane.mContext)._map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
 
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(location.getLatitude(),location.getLongitude())).tilt(30).zoom(16).bearing(location.getBearing()).build();
-        Toast.makeText(this.mContext,  String.valueOf(location.getBearing()),Toast.LENGTH_SHORT);
-        ((MapPane)MapPane.mContext)._map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(location.getLatitude(),location.getLongitude())).tilt(30).zoom(16).bearing(location.getBearing()).build();*//*
 
-        /*@@@@@@@@@@@@2
-        mSocket.off("heartbeat"); mSocket.off("heartbeatRes");
+        ((MapPane)MapPane.mContext)._map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
+
 
         // Send GPS information to Server using Socket
         try {
-                        mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+            mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+            mSocket.off("heartbeat"); mSocket.off("heartbeatRes");
         } catch (Exception e) {}
+
         mSocket.connect();
         mSocket.emit("heartbeat",jsonObject);
+        Log.e("HI",jsonObject.toString());
 
         // Get response
         mSocket.on("heartbeatRes", new Emitter.Listener() {
             @Override
             public void call(final Object... args){
                 Log.e("HHH","HearBeat Response");
-                JSONArray jsonRes = (JSONArray) args[0];
-                *//*
+
+                jsonRes= (JSONArray) args[0];
+                Log.e("**",jsonRes.toString());
+               /*
                 @@@@@@
                 받은걸로 지도에 띄우기,
                 띄운거에 클릭 이벤트로 카메라로 넘겨주기...?
                 @@@@@@@@
-                 *//*
-                ((MapPane)MapPane.mContext).pickMarkers(jsonRes);
+                 */
+/*
+
+                    try {
+                        for ( int i = 0 ; i<jsonRes.length(); i++) {
+                            JSONObject one = (JSONObject) jsonRes.getJSONObject(i);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+*/
 
             }
         });
-        @@@@@@@@@@@@@@@
-        */
+        ((MapPane)MapPane.mContext).pickMarkers(jsonRes);
+
 
 
 
