@@ -34,9 +34,10 @@ public class CatDetail extends AppCompatActivity {
         String  name = intent.getStringExtra("name");
         final String id = intent.getStringExtra("id");
 
-        mCatNameView.setText(name);
-        mCatPhotoView.setImageResource(getApplicationContext().getResources().getIdentifier(photo,"drawable",getApplicationContext().getPackageName()));
 
+       /* mCatNameView.setText(name);
+        mCatPhotoView.setImageResource(getApplicationContext().getResources().getIdentifier(photo,"drawable",getApplicationContext().getPackageName()));
+*/
 
         try {
             mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);

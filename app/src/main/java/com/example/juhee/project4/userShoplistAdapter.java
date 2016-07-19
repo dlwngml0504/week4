@@ -57,7 +57,6 @@ public class userShoplistAdapter extends BaseAdapter{
         final int pos = position;
         final Context context = parent.getContext();
 
-        Log.e("userShoppingAdapter","In~~~");
         if ( convertView == null ) {
             Log.e("userShoppingAdapter","convertView == null");
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
