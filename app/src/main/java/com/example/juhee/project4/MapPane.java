@@ -164,14 +164,9 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     catName = one.getString("catName");
                     JSONObject pos =(JSONObject)one.get("catlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
-/*
-                    BitmapFactory.Options options= new BitmapFactory.Options();
-                    options.inSampleSize = 4;
-                    Bitmap icon = BitmapFactory.decodeResource(getResources().getDrawable(getResources().getIdentifier("")),4);
-                    Bitmap resized = Bitmap.createScaledBitmap(icon,)
 
-                    BitmapDescriptorFactory icon = new BitmapDescriptorFactory.fromResource(getResources().getIdentifier("store","drawable",getPackageName()));*/
-                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("store","drawable",getPackageName()))));
+                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("caticon","drawable",getPackageName()))));
+
 
 
                     _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -191,7 +186,8 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     userId = one.getString("userid");
                     JSONObject pos =(JSONObject)one.get("userlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
-                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("myinfo","drawable",getPackageName()))));
+
+                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("caticon","drawable",getPackageName() ))));
                     markers.add(marker);
                 }
 
