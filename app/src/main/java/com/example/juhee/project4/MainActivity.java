@@ -101,8 +101,7 @@ public class MainActivity extends AppCompatActivity{
 
                                 Log.e("MMM",response.getJSONObject().toString());
 
-                                //sIntent intent = new Intent(MainActivity.this,MapPane.class);
-                                Intent intent = new Intent(MainActivity.this,CameraView.class);
+                                Intent intent = new Intent(MainActivity.this,MapPane.class);
                                 intent.putExtra("userinfo",response.getJSONObject().toString());
                                 startActivity(intent);
                             }
