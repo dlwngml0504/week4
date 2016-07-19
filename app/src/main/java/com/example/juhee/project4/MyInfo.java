@@ -94,7 +94,6 @@ public class MyInfo extends AppCompatActivity {
                 try {
                     //jsonRes = new JSONArray(msg);
                     userShoppingAdapter = new userShoplistAdapter(MyInfo.this,intent.getStringExtra("userinfo"));
-                    mMyItems = (ListView)findViewById(R.id.storeList);
                     mMyItems.setAdapter(userShoppingAdapter);
                     for (int i =0; i<userItem.length();i++) {
                         userShoppingAdapter.add(userItem.getJSONObject(i).toString());

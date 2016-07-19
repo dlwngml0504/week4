@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -162,8 +164,14 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     catName = one.getString("catName");
                     JSONObject pos =(JSONObject)one.get("catlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
-                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("cat","drawable",getPackageName()
-                    ))));
+/*
+                    BitmapFactory.Options options= new BitmapFactory.Options();
+                    options.inSampleSize = 4;
+                    Bitmap icon = BitmapFactory.decodeResource(getResources().getDrawable(getResources().getIdentifier("")),4);
+                    Bitmap resized = Bitmap.createScaledBitmap(icon,)
+
+                    BitmapDescriptorFactory icon = new BitmapDescriptorFactory.fromResource(getResources().getIdentifier("store","drawable",getPackageName()));*/
+                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("store","drawable",getPackageName()))));
 
 
                     _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -183,8 +191,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     userId = one.getString("userid");
                     JSONObject pos =(JSONObject)one.get("userlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
-                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("cat","drawable",getPackageName()
-                    ))));
+                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("myinfo","drawable",getPackageName()))));
                     markers.add(marker);
                 }
 

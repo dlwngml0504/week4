@@ -106,22 +106,25 @@ public class StoreAdapter extends BaseAdapter {
                             })
                             .setPositiveButton("확인", new DialogInterface.OnClickListener(){
                                 public void onClick(DialogInterface dialog, int whichButton){
+                                    Log.e("Emit Buy","확인");
                                     String value = input.getText().toString();
                                     try {
                                         mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
                                         mSocket.off("buy");
                                     } catch (Exception e) {}
                                     mSocket.connect();
-
+                                    Log.e("Emit Buy","확인22222");
                                     JSONObject jo = new JSONObject();
                                     try {
                                         jo.put("quantity",value);
-                                        jo.put("userid",buyer.getString("userid"));
-                                        //jo.put("iteminfo",);
-                                        Log.e("storeadapter_quantity",value);
+                                        jo.put("userid",buyer.getString("id"));
+                                        jo.put("iteminfo", new JSONObject( m_List.get(position)));
+                                        Log.e("Emit Buy",jo.toString());
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
+                                    Log.e("Emit Buy","확인33333");
+                                    Log.e("Emit Buy",jo.toString());
                                     mSocket.emit("buy",jo);
                                     dialog.cancel();
                                 }

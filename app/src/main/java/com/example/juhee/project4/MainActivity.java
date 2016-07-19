@@ -98,8 +98,11 @@ public class MainActivity extends AppCompatActivity{
                                     }
                                 });
 
+
                                 Log.e("MMM",response.getJSONObject().toString());
-                                Intent intent = new Intent(MainActivity.this,MapPane.class);
+
+                                //sIntent intent = new Intent(MainActivity.this,MapPane.class);
+                                Intent intent = new Intent(MainActivity.this,CameraView.class);
                                 intent.putExtra("userinfo",response.getJSONObject().toString());
                                 startActivity(intent);
                             }
