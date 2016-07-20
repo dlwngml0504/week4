@@ -177,6 +177,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                         public boolean onMarkerClick(Marker marker) {
                             // 그 마커(고양이 이미지) 클릭 시 카메라 뷰로 인텐트 넘어감 //
                             Intent intent = new Intent(MapPane.this,CameraView.class);
+
                             //인텐트에서 뭐 넘겨줄지 !!
                             startActivity(intent);
                             return true;
