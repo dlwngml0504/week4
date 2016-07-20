@@ -60,13 +60,16 @@ public class userShoplistAdapter extends BaseAdapter{
 
             TextView mItemName = (TextView) convertView.findViewById(R.id.mBasketName);
             TextView mItemEfficacy = (TextView) convertView.findViewById(R.id.mBasketEfficacy);
+            TextView mItemCnt = (TextView) convertView.findViewById(R.id.itemcnt);
             ImageView mItemImage = (ImageView) convertView.findViewById(R.id.mBasketImage);
             String iteminfo =  m_List.get(position);
             Log.e("userShoppingAdapter",iteminfo.toString());
             try {
                 JSONObject jo = new JSONObject(iteminfo);
+                Log.e("userShoplistAdapter",jo.toString());
                 mItemName.setText(jo.getString("itemName")+"("+jo.getString("itemcatalog")+")");
                 mItemEfficacy.setText("친밀도 상승 +"+jo.getString("efficacy"));
+                mItemCnt.setText(jo.getString("itemcnt")+"개");
                 mItemImage.setImageResource(m_Context.getResources().getIdentifier(jo.getString("drawable"),"drawable",m_Context.getPackageName()));
             } catch (JSONException e) {
                 e.printStackTrace();

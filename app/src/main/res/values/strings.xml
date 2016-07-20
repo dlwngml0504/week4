@@ -2,4 +2,5 @@
     <string name="app_name">APP NAME</string>
     <string name="take_picture">Take picture</string>
     <string name="facebook_app_id">1146965698693071</string>
+    <string name="and_char">&amp;</string>
 </resources>

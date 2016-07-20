@@ -27,13 +27,108 @@
         android:layout_below="@+id/mCatName"
         android:layout_alignStart="@+id/mCatName" />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:id="@+id/mCatInfoList"
+    <LinearLayout
+        android:id="@+id/ListView1"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/mCatPhoto"
+        android:layout_above="@+id/button"
+        android:orientation="vertical"
         android:layout_below="@+id/mCatName"
-        android:layout_alignEnd="@+id/mCatName"
-        android:layout_toRightOf="@+id/mCatPhoto"/>
+        android:weightSum="1">
+
+
+        <TextView
+            android:layout_width="65dp"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="AGE"
+            android:textColor="#FFFFFF"
+            android:background="#BDBDBD"
+            android:padding="2dp"
+            android:textSize="15dp"
+            android:id="@+id/textView5" />
+
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="65dp"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="STATUS"
+            android:textColor="#FFFFFF"
+            android:background="#BDBDBD"
+            android:padding="2dp"
+            android:textSize="15dp"
+
+            android:id="@+id/textView6" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="65dp"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="LOCATE"
+            android:textColor="#FFFFFF"
+            android:background="#BDBDBD"
+            android:padding="2dp"
+            android:textSize="15dp"
+
+            android:id="@+id/textView7" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/mCatInfoList"
+        android:layout_toRightOf="@+id/ListView1"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/mCatPhoto"
+        android:layout_above="@+id/button"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mCatAge"
+            android:padding="2dp"
+            android:textSize="15dp"
+            />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mCatStatus"
+            android:padding="2dp"
+            android:textSize="15dp"
+            />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mCatLat"
+            android:padding="2dp"
+            android:textSize="15dp"
+            />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/and_char"
+            android:textAlignment="center"
+            android:padding="2dp"
+            android:textSize="15dp"
+            />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mCatLon"
+            android:padding="2dp"
+            android:textSize="15dp"
+            />
+
+    </LinearLayout>
 
     <Button
         android:layout_width="360dp"

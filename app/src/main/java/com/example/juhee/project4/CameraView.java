@@ -140,6 +140,7 @@ public class CameraView extends RendererActivity {
         Button item6 = (Button)findViewById(R.id.item6);
         Button item7 = (Button)findViewById(R.id.item7);
         Button closeCamera = (Button)findViewById(R.id.close_btn);
+        Button GoStore = (Button)findViewById(R.id.store_btn);
 
         if (item1!=null) {
             item1.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +203,16 @@ public class CameraView extends RendererActivity {
                 @Override
                 public void onClick(View v) {
 
+                }
+            });
+        }
+        if (GoStore!=null) {
+            GoStore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent store_intent = new Intent(CameraView.this,Store.class);
+                    store_intent.putExtra("userinfo",user.toString());
+                    startActivity(store_intent);
                 }
             });
         }
