@@ -2,9 +2,7 @@ package com.example.juhee.project4;
 
 import android.*;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -22,19 +20,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
-import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Toast;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 
-import com.google.android.gms.vision.text.Line;
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.util.Arrays;
 
 import min3d.core.Object3dContainer;
@@ -46,6 +45,10 @@ import min3d.vos.Light;
 public class CameraView extends RendererActivity {
     private final static String TAG = "Camera2testJ";
     private Size mPreviewSize;
+    Intent intent = null;
+    public Socket mSocket;
+    final String SERVER_IP = "52.78.66.95";
+    final String SERVER_PORT = ":8124";
     private TextureView mTextureView;
     private CameraDevice mCameraDevice;
     private CaptureRequest.Builder mPreviewBuilder;
@@ -56,6 +59,7 @@ public class CameraView extends RendererActivity {
     private int[] light = new int[] {3, 7, 7, 7, 7, 7, 3};
     String filepath = "com.example.juhee.project4:";
     private String[] filename = new String[] {"raw/cat_obj", "raw/cat1_obj", "raw/cat2_obj", "raw/cat3_obj", "raw/cat4_obj",  "raw/cat5_obj", "raw/cat6_obj"};
+    JSONObject user = null;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     static {
@@ -68,11 +72,83 @@ public class CameraView extends RendererActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera_view_activity);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        LinearLayout ll = (LinearLayout)findViewById(R.id.ll);
-        ll.addView(_glSurfaceView);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.camera_view_activity);
+        intent = getIntent();
+        try {
+            user = new JSONObject(intent.getStringExtra("userinfo"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+            mSocket.off("useritem");
+            mSocket.off("useritemRes");
+        } catch (Exception e) {}
+        mSocket.connect();
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("userid",user.getString("id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mSocket.emit("useritem",jo);
+        mSocket.on("useritemRes", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args){
+                Log.e("CameraView","useritems Response"+args[0].toString());
+            }
+        });
+
+        Button item1 = (Button)findViewById(R.id.item1);
+        Button item2 = (Button)findViewById(R.id.item2);
+        Button item3 = (Button)findViewById(R.id.item3);
+        Button item4 = (Button)findViewById(R.id.item4);
+        Button item5 = (Button)findViewById(R.id.item5);
+        Button item6 = (Button)findViewById(R.id.item6);
+        Button item7 = (Button)findViewById(R.id.item7);
+
+        if (item1!=null) {
+            item1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e("USEITEM","***************");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CameraView.this);
+                    builder.setTitle("아이템을 사용하시겠습니까?")
+                            .setCancelable(false)
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener(){
+                                public void onClick(DialogInterface dialog, int whichButton){
+                                    dialog.cancel();
+                                }
+                            })
+                            .setPositiveButton("사용하기", new DialogInterface.OnClickListener(){
+                                public void onClick(DialogInterface dialog, int whichButton){
+                                    try {
+                                        mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+                                        mSocket.off("useitem");
+                                    } catch (Exception e) {}
+                                    mSocket.connect();
+                                    JSONObject jo = new JSONObject();
+                                    try {
+                                        jo.put("iteminfo",1);
+
+                                        jo.put("userid",user.getString("id"));
+                                        jo.put("catname",intent.getStringExtra("catname"));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    mSocket.emit("useitem",jo);
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
+        }
         mTextureView = (TextureView) findViewById(R.id.texture);
         mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         Log.e("@@@","@@@@@@@@@@@@@@@@@@@@@@@");
@@ -104,7 +180,6 @@ public class CameraView extends RendererActivity {
         scene.addChild(faceObject3D);
 
     }
-
     @Override
     protected void onResume() {
         super.onResume();

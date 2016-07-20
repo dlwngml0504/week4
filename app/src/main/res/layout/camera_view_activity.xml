@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
         android:layout_alignParentTop="true"/>
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -20,7 +19,6 @@
         android:background="@android:color/transparent"
         android:id="@+id/ll"
         android:layout_alignBottom="@+id/texture"></LinearLayout>
-
     <Button
         android:id="@+id/store_btn"
         android:layout_width="40dp"
@@ -50,48 +48,55 @@
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="@drawable/snackdried" />
     <Button
         android:id="@+id/item2"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
-        android:layout_toEndOf="@+id/item1" />
+        android:layout_toEndOf="@+id/item1"
+        android:background="@drawable/snackstick" />
     <Button
         android:id="@+id/item3"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
-        android:layout_toEndOf="@+id/item2" />
+        android:layout_toEndOf="@+id/item2"
+        android:background="@drawable/snackcan"/>
     <Button
         android:id="@+id/item4"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
-        android:layout_toEndOf="@+id/item3" />
+        android:layout_toEndOf="@+id/item3"
+        android:background="@drawable/toyball" />
     <Button
         android:id="@+id/item5"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
-        android:layout_toEndOf="@+id/item4" />
+        android:layout_toEndOf="@+id/item4"
+        android:background="@drawable/toymouse" />
     <Button
         android:id="@+id/item6"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
-        android:layout_toEndOf="@+id/item5" />
+        android:layout_toEndOf="@+id/item5"
+        android:background="@drawable/toyhair" />
     <Button
         android:id="@+id/item7"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
-        android:layout_toEndOf="@+id/item6" />
+        android:layout_toEndOf="@+id/item6"
+        android:background="@drawable/etchouse" />
     <Button
         android:id="@+id/item8"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
-        android:layout_toEndOf="@+id/item7" />
-
+        android:layout_toEndOf="@+id/item7"
+        android:background="@drawable/food" />
 </RelativeLayout>

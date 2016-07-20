@@ -28,10 +28,6 @@ public class userShoplistAdapter extends BaseAdapter{
     private ArrayList<String> m_List;
     private Context m_Context;
     private String id;
-    public Socket mSocket;
-    final String SERVER_IP = "52.78.66.95";
-    final String SERVER_PORT = ":8124";
-
     public userShoplistAdapter(Context context,String user) {
         m_List = new ArrayList<String>();
         m_Context = context;
