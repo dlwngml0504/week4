@@ -41,15 +41,13 @@
         android:text="ItemName"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
-        android:layout_toStartOf="@+id/mBuy"
-        android:layout_marginRight="7dp"/>
+        android:layout_toStartOf="@+id/mBuy"/>
 
     <Button
         android:id="@+id/mBuy"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginRight="5dp"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         android:layout_alignTop="@+id/mItemName"
         android:layout_alignParentEnd="true"
-        android:text="Buy"/>
+        android:background="@drawable/buybtn"/>
 </RelativeLayout>

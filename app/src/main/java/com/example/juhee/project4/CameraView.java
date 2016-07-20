@@ -56,6 +56,14 @@ public class CameraView extends AppCompatActivity {
     private CameraCaptureSession mPreviewSession;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     JSONObject user = null;
+    Integer item1_num;
+    Integer item2_num;
+    Integer item3_num;
+    Integer item4_num;
+    Integer item5_num;
+    Integer item6_num;
+    Integer item7_num;
+
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
@@ -88,6 +96,7 @@ public class CameraView extends AppCompatActivity {
         JSONObject jo = new JSONObject();
         try {
             jo.put("userid",user.getString("id"));
+            Log.e("CameraView-----",jo.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -95,7 +104,19 @@ public class CameraView extends AppCompatActivity {
         mSocket.on("useritemRes", new Emitter.Listener() {
             @Override
             public void call(final Object... args){
-                Log.e("CameraView","useritems Response"+args[0].toString());
+                JSONArray ja = (JSONArray) args[0];
+                try {
+                    item1_num = ja.getJSONObject(0).getInt("1");
+                    item2_num = ja.getJSONObject(1).getInt("2");
+                    item3_num = ja.getJSONObject(2).getInt("3");
+                    item4_num = ja.getJSONObject(3).getInt("4");
+                    item5_num = ja.getJSONObject(4).getInt("5");
+                    item6_num = ja.getJSONObject(5).getInt("6");
+                    item7_num = ja.getJSONObject(6).getInt("7");
+                    Log.e("CameraView+++++",ja.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -111,46 +132,15 @@ public class CameraView extends AppCompatActivity {
             item1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("USEITEM","***************");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(CameraView.this);
-                    builder.setTitle("아이템을 사용하시겠습니까?")
-                            .setCancelable(false)
-                            .setNegativeButton("취소", new DialogInterface.OnClickListener(){
-                                public void onClick(DialogInterface dialog, int whichButton){
-                                    dialog.cancel();
-                                }
-                            })
-                            .setPositiveButton("사용하기", new DialogInterface.OnClickListener(){
-                                public void onClick(DialogInterface dialog, int whichButton){
-                                    try {
-                                        mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
-                                        mSocket.off("useitem");
-                                    } catch (Exception e) {}
-                                    mSocket.connect();
-                                    JSONObject jo = new JSONObject();
-                                    try {
-                                        jo.put("iteminfo",1);
-
-                                        jo.put("userid",user.getString("id"));
-                                        jo.put("catname",intent.getStringExtra("catname"));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    mSocket.emit("useitem",jo);
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                    getItemInfo(1,item1_num);
                 }
             });
         }
-/*        if (item2!=null) {
+        if (item2!=null) {
             item2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    getItemInfo(2,item2_num);
                 }
             });
         }
@@ -158,7 +148,7 @@ public class CameraView extends AppCompatActivity {
             item3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    getItemInfo(3,item3_num);
                 }
             });
         }
@@ -166,7 +156,7 @@ public class CameraView extends AppCompatActivity {
             item4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    getItemInfo(4,item4_num);
                 }
             });
         }
@@ -174,7 +164,7 @@ public class CameraView extends AppCompatActivity {
             item5.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    getItemInfo(5,item5_num);
                 }
             });
         }
@@ -182,7 +172,7 @@ public class CameraView extends AppCompatActivity {
             item6.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    getItemInfo(6,item6_num);
                 }
             });
         }
@@ -190,13 +180,12 @@ public class CameraView extends AppCompatActivity {
             item7.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    getItemInfo(7,item7_num);
                 }
             });
-        }*/
+        }
         mTextureView = (TextureView) findViewById(R.id.texture);
         mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        Log.e("@@@","@@@@@@@@@@@@@@@@@@@@@@@");
 
     }
     @Override
@@ -205,6 +194,76 @@ public class CameraView extends AppCompatActivity {
         Log.e(TAG, "onResume");
     }
 
+    private void getItemInfo(final int i, final int item_num){
+        Log.e("USEITEM","***************");
+        AlertDialog.Builder builder = new AlertDialog.Builder(CameraView.this);
+        if (item_num==0) {
+            builder.setTitle("아이템을 사용하시겠습니까?")
+                    .setMessage("보유하고 있는 아이템 수 : 0 \n아이템을 사용하실 수 없습니다.")
+                    .setCancelable(false)
+                    .setNegativeButton("돌아가기", new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int whichButton){
+                            dialog.cancel();
+                        }
+                    });
+        }
+        else {
+            builder.setTitle("아이템을 사용하시겠습니까?")
+                    .setMessage("보유하고 있는 아이템 수 : " +item_num)
+                    .setCancelable(false)
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int whichButton){
+                            dialog.cancel();
+                        }
+                    })
+                    .setPositiveButton("사용하기", new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int whichButton){
+                            try {
+                                mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
+                                mSocket.off("useitem");
+                            } catch (Exception e) {}
+                            mSocket.connect();
+                            JSONObject jo = new JSONObject();
+                            try {
+                                jo.put("iteminfo",i);
+
+                                jo.put("userid",user.getString("id"));
+                                jo.put("catname",intent.getStringExtra("catname"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            mSocket.emit("useitem",jo);
+                            Log.e("Cameraview Alert",jo.toString());
+                            if (i==1){
+                                item1_num--;
+                            }
+                            else if (i==2){
+                                item2_num--;
+                            }
+                            else if (i==3){
+                                item3_num--;
+                            }
+                            else if (i==4){
+                                item4_num--;
+                            }
+                            else if (i==5){
+                                item5_num--;
+                            }
+                            else if (i==6){
+                                item6_num--;
+                            }
+                            else if (i==7){
+                                item7_num--;
+                            }
+                            dialog.cancel();
+                        }
+                    });
+
+        }
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     private void openCamera() {
 
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
