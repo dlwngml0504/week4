@@ -18,6 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class CatDetail extends AppCompatActivity {
     TextView mCatNameView;
     ImageView mCatPhotoView;
@@ -29,11 +31,16 @@ public class CatDetail extends AppCompatActivity {
 
     ListView mCatRankListView;
 
+    JSONObject jsonRes;
     JSONObject catInfo;
     JSONArray catRank;
+
+    CatDetailAdapter catDetailAdapter;
+
     public Socket mSocket;
     final String SERVER_IP = "52.78.66.95";
     final String SERVER_PORT = ":8124";
+    public String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,7 @@ public class CatDetail extends AppCompatActivity {
         Intent intent = getIntent();
         //String  photo = intent.getStringExtra("photo");
         String  name = intent.getStringExtra("name");
+        id = intent.getStringExtra("id");
 
 
 
@@ -53,8 +61,10 @@ public class CatDetail extends AppCompatActivity {
         mCatLatView = (TextView)findViewById(R.id.mCatLat);
         mCatLonView = (TextView)findViewById(R.id.mCatLon);
 
+        mCatRankListView = (ListView) findViewById(R.id.mCatRankingList);
 
-        final CatDetailAdapter catDetailAdapter = new CatDetailAdapter(this);
+
+
 
 
         mCatNameView.setText(name);
@@ -63,18 +73,36 @@ public class CatDetail extends AppCompatActivity {
         final Handler handler0 = new Handler(){
             @Override
             public void handleMessage(Message msg) {
-                String age,status,lat,lon;
+                String catName,age,status,st,lat,lon;
                 try {
+                    Log.e("H!","!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     age = catInfo.getString("catAge");
                     status = catInfo.getString("catstatus");
                     JSONObject loc = catInfo.getJSONObject("catlocate");
                     lat = loc.getString("lat");
                     lon = loc.getString("lon");
+                    catName = catInfo.getString("catName");
+                    String Status ="";
+
+                    // 고양이 이름으로 마커 이미지 변경
+                    if(catName.equals("아름이")) Status = "0";
+                    else if(catName.equals("진리")) Status="1";
+                    else if(catName.equals("소망냥")) Status="2";
+                    else if(catName.equals("치즈냥이")) Status="3";
+                    else if(catName.equals("서측")) Status="4";
+                    else if(catName.equals("교수회관냥")) Status="5";
+                    else if(catName.equals("패컬티")) Status="6";
+
+
+                    st = (new JSONObject(status)).getString("satiety")+"/"+(new JSONObject(status).getString("lastMealTime"));
+                    mCatPhotoView.setImageResource(getResources().getIdentifier("marker"+Status,"drawable",getPackageName()));
+
 
                     mCatAgeView.setText(age);
-                    mCatStatusView.setText(status);
+                    mCatStatusView.setText(st);
                     mCatLatView.setText(lat);
                     mCatLonView.setText(lon);
+                    Log.e("H2","@@@@@@@@@@@@@@@2");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -83,11 +111,12 @@ public class CatDetail extends AppCompatActivity {
             }
         };
 
+        catDetailAdapter = new CatDetailAdapter(this);
         final Handler handler1 = new Handler(){
             @Override
             public void handleMessage(Message msg){
 
-
+                Log.e("@@","@@@@@@@@@@@@@");
                 try {
                     for (int i = 0; i<catRank.length(); i++){
                         JSONObject one = catRank.getJSONObject(i);
@@ -96,13 +125,14 @@ public class CatDetail extends AppCompatActivity {
                         rank = one.getString("rank");
                         user = one.getString("username");
                         me = false;
-                        /*if (id == user){
+                        if (id == user){
                             me = true;
-                        }*/
+                        }
                         catDetailAdapter.addItem(user,rank, me);
 
                     }
                     mCatRankListView.setAdapter(catDetailAdapter);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -110,20 +140,20 @@ public class CatDetail extends AppCompatActivity {
             }
         };
 
-       /* mCatNameView.setText(name);
-        mCatPhotoView.setImageResource(getApplicationContext().getResources().getIdentifier(photo,"drawable",getApplicationContext().getPackageName()));
-*/
+
 
         try {
             mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
             mSocket.off("catInfo");
             mSocket.off("catInfoRes");
+            Log.e("REQU","SENDDDDDDDDDDDDDdd");
         } catch (Exception e) {}
         mSocket.connect();
 
         try {
             JSONObject sendname = new JSONObject().put("catName",name);
             mSocket.emit("catInfo",sendname);
+            Log.e("REQU","SENDDDDDDDDDDDDDdd");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -137,11 +167,12 @@ public class CatDetail extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        JSONObject jsonRes = (JSONObject) args[0];
+                        jsonRes = (JSONObject) args[0];
+                        catInfo = jsonRes;
+                        Log.e("RESPONSE",jsonRes.toString());
                         try {
-                            catInfo = (JSONObject)jsonRes.get("catInfo");
-                            catRank = (JSONArray)jsonRes.get("catRank");
-                            Log.e("CAT INFO", catInfo.toString());
+                            catRank = new JSONArray(jsonRes.getString("catRank"));
+
                             Log.e("CAT RANK", catRank.toString());
                             /// @@@catinfo 넣기@@@
                             Message msg0 = handler0.obtainMessage();
@@ -150,6 +181,8 @@ public class CatDetail extends AppCompatActivity {
                             // 유저 랭킹 어댑터로 리스트뷰에 넣기
                             Message msg1 = handler1.obtainMessage();
                             handler1.sendMessage(msg1);
+
+                            Log.e("**","**********");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

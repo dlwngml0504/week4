@@ -77,7 +77,7 @@ public class MyInfo extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 try {
-
+                    Log.e("22","22222222222222222");
                     for ( int i = 0; i<userRank.length(); i++) {
 
                         String photo, name, rank;
@@ -168,7 +168,7 @@ public class MyInfo extends AppCompatActivity {
                             // 아이템 리스트 어댑터로 리스트 뷰에 넣기
                             Message msg2 = handler2.obtainMessage();
                             handler2.sendMessage(msg2);
-
+                            Log.e("11","111111111111111111");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -214,7 +214,7 @@ public class MyInfo extends AppCompatActivity {
     public class ListViewRankClickListener implements AdapterView.OnItemClickListener{
         String  pn;
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long i) {
 
 
             Intent intent = new Intent(MyInfo.this,CatDetail.class);
