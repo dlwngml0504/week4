@@ -1,0 +1,9 @@
+newmtl Cat
+Ns 92
+Ni 1
+d 1
+illum 2
+map_Kd cat5.jpg
+Kd 0.8 0.8 0.8
+Ks 0.1 0.1 0.1
+Ka 0.000000 0.000000 0.000000

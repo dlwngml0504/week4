@@ -11,6 +11,14 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
         android:layout_alignParentTop="true"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:id="@+id/ll"
+        android:layout_alignBottom="@+id/texture"></LinearLayout>
     <Button
         android:id="@+id/store_btn"
         android:layout_width="40dp"
@@ -34,21 +42,21 @@
         android:background="@drawable/money"
         android:layout_below="@+id/store_btn"
         android:layout_alignStart="@+id/store_btn"
-        android:text="      $000"/>
+        android:text="    $000"/>
     <Button
         android:id="@+id/item1"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/snackdried"/>
+        android:background="@drawable/snackdried" />
     <Button
         android:id="@+id/item2"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
         android:layout_toEndOf="@+id/item1"
-        android:background="@drawable/snackstick"/>
+        android:background="@drawable/snackstick" />
     <Button
         android:id="@+id/item3"
         android:layout_width="45dp"
@@ -83,12 +91,12 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
         android:layout_toEndOf="@+id/item6"
-        android:background="@drawable/etchouse"/>
+        android:background="@drawable/etchouse" />
     <Button
         android:id="@+id/item8"
         android:layout_width="45dp"
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
         android:layout_toEndOf="@+id/item7"
-        android:background="@drawable/food"/>
+        android:background="@drawable/food" />
 </RelativeLayout>
