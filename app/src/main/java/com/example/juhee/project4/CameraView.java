@@ -2,7 +2,10 @@ package com.example.juhee.project4;
 
 import android.*;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -16,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Size;
@@ -26,6 +30,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -72,9 +77,11 @@ public class CameraView extends RendererActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.camera_view_activity);
+        LinearLayout ll = (LinearLayout)findViewById(R.id.ll);
+        ll.addView(_glSurfaceView);
         intent = getIntent();
         try {
             user = new JSONObject(intent.getStringExtra("userinfo"));
@@ -168,7 +175,7 @@ public class CameraView extends RendererActivity {
         scene.lights().add(new Light());
         scene.lights().add(new Light());
         scene.lights().add(new Light());
-        IParser myParser = Parser.createParser(Parser.Type.OBJ, getResources(),"com.example.juhee.project4:raw/cat6_obj", true);
+        IParser myParser = Parser.createParser(Parser.Type.OBJ, getResources(),"com.example.juhee.project4:raw/cat1_obj", true);
         myParser.parse();
         faceObject3D = myParser.getParsedObject();
         faceObject3D.position().x =faceObject3D.position().z = 0;
