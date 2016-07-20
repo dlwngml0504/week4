@@ -57,7 +57,6 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
             JSONObject obj = new JSONObject(intent.getStringExtra("userinfo"));
             id = obj.getString("id");
         } catch (JSONException e) {
-            Log.e("@@","JSON EXCEPTION");
             e.printStackTrace();
         }
 
@@ -162,7 +161,6 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                 one = jsonArray.getJSONObject(i);
                 if (one.has("catName")){
                     catName = one.getString("catName");
-                    Log.e("CATNAME",catName);
                     JSONObject pos =(JSONObject)one.get("catlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
 
@@ -186,7 +184,6 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                             @Override
                             public boolean onMarkerClick(Marker marker) {
 
-                                Log.e("YOU","CLICKED MARKER");
                                 // 그 마커(고양이 이미지) 클릭 시 카메라 뷰로 인텐트 넘어감 //
                                 Intent intent2 = new Intent(MapPane.this,CameraView.class);
 
