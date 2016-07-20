@@ -127,6 +127,7 @@ public class CameraView extends AppCompatActivity {
         Button item5 = (Button)findViewById(R.id.item5);
         Button item6 = (Button)findViewById(R.id.item6);
         Button item7 = (Button)findViewById(R.id.item7);
+        Button closeCamera = (Button)findViewById(R.id.close_btn);
 
         if (item1!=null) {
             item1.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +182,14 @@ public class CameraView extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     getItemInfo(7,item7_num);
+                }
+            });
+        }
+        if (closeCamera!=null) {
+            closeCamera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
                 }
             });
         }
