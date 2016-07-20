@@ -61,8 +61,17 @@ public class userRankingAdapter extends BaseAdapter {
 
         //사진 어떻게 할지 미정
         // cat name을 파일명으로 하여 드로어블에서 뽑아온다.
-
-        holder.mCatPhoto.setImageResource(mContext.getResources().getIdentifier("caticon","drawable",mContext.getPackageName()));
+        String status ="";
+        String catName = mData.mCatName;
+        // 고양이 이름으로 마커 이미지 변경
+        if(catName.equals("아름이")) status = "0";
+        else if(catName.equals("진리")) status="1";
+        else if(catName.equals("소망냥")) status="2";
+        else if(catName.equals("치즈냥이")) status="3";
+        else if(catName.equals("서측")) status="4";
+        else if(catName.equals("교수회관냥")) status="5";
+        else if(catName.equals("패컬티")) status="6";
+        holder.mCatPhoto.setImageResource(mContext.getResources().getIdentifier("marker"+status,"drawable",mContext.getPackageName()));
         holder.mCatName.setText(mData.mCatName);
         holder.mCatMyRank.setText(mData.mCatMyRank);
 

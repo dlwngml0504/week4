@@ -166,11 +166,39 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     JSONObject pos =(JSONObject)one.get("catlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
 
-                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("caticon","drawable",getPackageName()))));
+                    String status ="";
 
+                    // 고양이 이름으로 마커 이미지 변경
+                    if(catName.equals("아름이")) status = "0";
+                    else if(catName.equals("진리")) status="1";
+                    else if(catName.equals("소망냥")) status="2";
+                    else if(catName.equals("치즈냥이")) status="3";
+                    else if(catName.equals("서측")) status="4";
+                    else if(catName.equals("교수회관냥")) status="5";
+                    else if(catName.equals("패컬티")) status="6";
 
+                    Marker marker = _map.addMarker(new MarkerOptions().title(catName).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("marker"+ status,"drawable",getPackageName()))));
 
+                    if (one.getString("isNear")=="true"){
+                        //near에 있는 경우만 클릭이벤트 정의해줌
 
+                        _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+
+                                Log.e("YOU","CLICKED MARKER");
+                                // 그 마커(고양이 이미지) 클릭 시 카메라 뷰로 인텐트 넘어감 //
+                                Intent intent2 = new Intent(MapPane.this,CameraView.class);
+
+                                //인텐트에서 넘겨주는것 : catname
+
+                                intent2.putExtra("catname",marker.getTitle());
+                                intent2.putExtra("userinfo",intent.getStringExtra("userinfo"));
+                                startActivity(intent2);
+                                return true;
+                            }
+                        });
+                    }
                     markers.add(marker);
                 } else {
                     //case : Other users
@@ -178,7 +206,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     JSONObject pos =(JSONObject)one.get("userlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
 
-                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("caticon","drawable",getPackageName() ))));
+                    Marker marker = _map.addMarker(new MarkerOptions().title(userId).position(position).alpha(0.7f).icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("usericon","drawable",getPackageName() ))));
                     markers.add(marker);
                 }
 
