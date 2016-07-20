@@ -79,14 +79,16 @@ public class MyInfo extends AppCompatActivity {
                 try {
 
                     for ( int i = 0; i<userRank.length(); i++) {
+
                         String photo, name, rank;
                         JSONObject one = userRank.getJSONObject(i);
                         //photo = one.getString("")
                         photo = null;
                         name = one.getString("catname");
-                        rank = one.getString("myrank");
+                        rank = one.getString("rank");
 
                         userRankingAdapter.addItem(photo,name,rank);
+
                     }
                     mMyRanking.setAdapter(userRankingAdapter);
                     ListViewRankClickListener listViewRankClickListener = new ListViewRankClickListener();
