@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.os.Looper;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,6 +93,8 @@ public class StoreAdapter extends BaseAdapter {
 
 
             Button btn = (Button) convertView.findViewById(R.id.mBuy);
+            final View finalConvertView = convertView;
+            final View finalConvertView1 = convertView;
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -111,9 +115,9 @@ public class StoreAdapter extends BaseAdapter {
                                     try {
                                         mSocket = IO.socket("http://"+SERVER_IP+SERVER_PORT);
                                         mSocket.off("buy");
+                                        mSocket.off("buyRes");
                                     } catch (Exception e) {}
                                     mSocket.connect();
-                                    Log.e("Emit Buy","확인22222");
                                     JSONObject jo = new JSONObject();
                                     try {
                                         jo.put("quantity",value);
@@ -123,9 +127,60 @@ public class StoreAdapter extends BaseAdapter {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    Log.e("Emit Buy","확인33333");
-                                    Log.e("Emit Buy",jo.toString());
                                     mSocket.emit("buy",jo);
+                                    mSocket.on("buyRes", new Emitter.Listener() {
+                                        @Override
+                                        public void call(final Object... args){
+                                            JSONObject buyResJO = (JSONObject) args[0];
+                                            try {
+                                                Boolean bool = (Boolean) buyResJO.get("isSucceed");
+                                                if (bool==true) {
+                                                    new Thread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            Looper.prepare();
+                                                            AlertDialog.Builder builder = new AlertDialog.Builder(m_Context);
+
+                                                            builder.setTitle("구매 성공하셨습니다.")
+                                                                    .setNegativeButton("확인", new DialogInterface.OnClickListener(){
+                                                                        public void onClick(DialogInterface dialog, int whichButton){
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+
+                                                            AlertDialog dialog = builder.create();
+                                                            dialog.show();
+                                                            Looper.loop();
+                                                        }
+                                                    }).start();
+
+                                                }
+                                                else {
+                                                    new Thread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            Looper.prepare();
+                                                            AlertDialog.Builder builder2 = new AlertDialog.Builder(m_Context);
+
+                                                            builder2.setTitle("cash가 부족하여 구매 실패하셨습니다.")
+                                                                    .setNegativeButton("확인", new DialogInterface.OnClickListener(){
+                                                                        public void onClick(DialogInterface dialog, int whichButton){
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+
+                                                            AlertDialog dialog = builder2.create();
+                                                            dialog.show();
+                                                            Looper.loop();
+                                                        }
+                                                    }).start();
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                    });
                                     dialog.cancel();
                                 }
                             });
@@ -133,29 +188,6 @@ public class StoreAdapter extends BaseAdapter {
                     AlertDialog dialog = builder.create();
                     dialog.show();
 
-                }
-            });
-
-
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.e("StoreAdapter","hehe");
-                    String iteminfo2 =  m_List.get(position);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(m_Context);
-
-                    builder.setTitle("Item 효과")
-                            .setMessage("친밀도 상승 **")
-                            .setCancelable(false)
-                            .setNegativeButton("뒤로가기", new DialogInterface.OnClickListener(){
-                                public void onClick(DialogInterface dialog, int whichButton){
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
                 }
             });
         }

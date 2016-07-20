@@ -76,7 +76,7 @@ public class CameraView extends RendererActivity {
     Integer item5_num;
     Integer item6_num;
     Integer item7_num;
-
+    Integer item8_num;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     static {
@@ -119,6 +119,7 @@ public class CameraView extends RendererActivity {
             public void call(final Object... args){
                 JSONArray ja = (JSONArray) args[0];
                 try {
+                    Log.e("Cameraview~~~~",ja.toString());
                     item1_num = ja.getJSONObject(0).getInt("1");
                     item2_num = ja.getJSONObject(1).getInt("2");
                     item3_num = ja.getJSONObject(2).getInt("3");
@@ -126,6 +127,7 @@ public class CameraView extends RendererActivity {
                     item5_num = ja.getJSONObject(4).getInt("5");
                     item6_num = ja.getJSONObject(5).getInt("6");
                     item7_num = ja.getJSONObject(6).getInt("7");
+                    item8_num = ja.getJSONObject(7).getInt("8");
                     Log.e("CameraView+++++",ja.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -139,6 +141,7 @@ public class CameraView extends RendererActivity {
         Button item5 = (Button)findViewById(R.id.item5);
         Button item6 = (Button)findViewById(R.id.item6);
         Button item7 = (Button)findViewById(R.id.item7);
+        Button item8 = (Button)findViewById(R.id.item8);
         Button closeCamera = (Button)findViewById(R.id.close_btn);
         Button GoStore = (Button)findViewById(R.id.store_btn);
 
@@ -195,6 +198,14 @@ public class CameraView extends RendererActivity {
                 @Override
                 public void onClick(View v) {
                     getItemInfo(7,item7_num);
+                }
+            });
+        }
+        if (item8!=null) {
+            item8.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getItemInfo(8,item8_num);
                 }
             });
         }
@@ -293,26 +304,15 @@ public class CameraView extends RendererActivity {
                             }
                             mSocket.emit("useitem",jo);
                             Log.e("Cameraview Alert",jo.toString());
-                            if (i==1){
-                                item1_num--;
-                            }
-                            else if (i==2){
-                                item2_num--;
-                            }
-                            else if (i==3){
-                                item3_num--;
-                            }
-                            else if (i==4){
-                                item4_num--;
-                            }
-                            else if (i==5){
-                                item5_num--;
-                            }
-                            else if (i==6){
-                                item6_num--;
-                            }
-                            else if (i==7){
-                                item7_num--;
+                            switch (i) {
+                                case 1 : item1_num--;
+                                case 2 : item2_num--;
+                                case 3 : item3_num--;
+                                case 4 : item4_num--;
+                                case 5 : item5_num--;
+                                case 6 : item6_num--;
+                                case 7 : item7_num--;
+                                case 8 : item8_num--;
                             }
                             dialog.cancel();
                         }

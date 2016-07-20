@@ -39,15 +39,15 @@
         android:textSize="20sp"
         android:textColor="#F51C1C"
         android:text="ItemName"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
-        android:layout_toStartOf="@+id/mBuy"/>
+        android:layout_marginLeft="180dp"
+        android:layout_above="@+id/mItemCatalogue"/>
 
     <Button
         android:id="@+id/mBuy"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="60dp"
-        android:layout_alignTop="@+id/mItemName"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/buybtn"/>
+        android:layout_marginLeft="240dp"
+        android:background="@drawable/buybtn"
+        android:layout_alignTop="@+id/mItemCost"/>
 </RelativeLayout>

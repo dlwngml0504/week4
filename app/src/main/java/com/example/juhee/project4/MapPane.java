@@ -170,7 +170,26 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
 
 
 
+                    _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
 
+                            Log.e("YOU","CLICKED MARKER");
+                            // 그 마커(고양이 이미지) 클릭 시 카메라 뷰로 인텐트 넘어감 //
+                            Intent intent2 = new Intent(MapPane.this,CameraView.class);
+                            //인텐트에서 뭐 넘겨줄지 !!
+                            try {
+                                intent2.putExtra("catname",one.getString("catName"));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            intent2.putExtra("userinfo",intent.getStringExtra("userinfo"));
+
+                            startActivity(intent2);
+                            return true;
+                        }
+                    });
                     markers.add(marker);
                 } else {
                     //case : Other users

@@ -42,7 +42,7 @@ public class Store extends AppCompatActivity {
         final CheckBox chToy = (CheckBox)findViewById(R.id.checktoy);
         final CheckBox chEtc = (CheckBox)findViewById(R.id.checketc);
         final Intent intent = getIntent();
-
+        Button MapBtn = (Button)findViewById(R.id.gobackBtn);
 
         final Handler handler = new Handler(){
             @Override
@@ -63,6 +63,16 @@ public class Store extends AppCompatActivity {
             }
         };
 
+        if (MapBtn!=null) {
+            MapBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent2 = new Intent(Store.this,MapPane.class);
+                    intent2.putExtra("userinfo",intent.getStringExtra("userinfo"));
+                    startActivity(intent2);
+                }
+            });
+        }
         if (btn!=null) {
             btn.setOnClickListener(new View.OnClickListener(){
                 @Override
