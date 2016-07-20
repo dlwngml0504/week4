@@ -111,8 +111,10 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
             //gps = new GpsInfo(getApplicationContext());
             gps = new GpsInfo(MapPane.this);
 
+            Log.e("isget", String.valueOf(gps.isGetLocation()));
             if (gps.isGetLocation()) {
 
+                Log.e("GPS","GGGGGGGGGGGGGGGGGGGGGGGG");
                 latitude = gps.getLatitude();
                 longitude = gps.getLongitude();
                 LatLng now = new LatLng(latitude,longitude);
@@ -124,6 +126,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                 map.animateCamera(CameraUpdateFactory.zoomTo(16));
                 _map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+                Log.e("T","TTTTTTTTTTTTTTTTT");
             } else {
                 // GPS 를 사용할수 없으므로
                 gps.showSettingsAlert();
@@ -172,7 +175,6 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                     _map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
-
                             // 그 마커(고양이 이미지) 클릭 시 카메라 뷰로 인텐트 넘어감 //
                             Intent intent = new Intent(MapPane.this,CameraView.class);
                             //인텐트에서 뭐 넘겨줄지 !!

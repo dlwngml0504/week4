@@ -11,6 +11,16 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
         android:layout_alignParentTop="true"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:id="@+id/ll"
+        android:layout_alignBottom="@+id/texture"></LinearLayout>
+
     <Button
         android:id="@+id/store_btn"
         android:layout_width="40dp"
@@ -83,4 +93,5 @@
         android:layout_height="50dp"
         android:layout_alignTop="@+id/item1"
         android:layout_toEndOf="@+id/item7" />
+
 </RelativeLayout>
