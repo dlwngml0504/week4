@@ -35,7 +35,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
 
 
     public static Context mContext;
-
+    Intent intent = null;
     // GPSTracker class
     private GpsInfo gps;
     double latitude, longitude;
@@ -52,7 +52,7 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_activity);
         mContext = this;
-        final Intent intent = this.getIntent();
+        intent = this.getIntent();
         try {
             JSONObject obj = new JSONObject(intent.getStringExtra("userinfo"));
             id = obj.getString("id");
@@ -78,9 +78,9 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 // Myinfo activity로 넘어감
-                Intent intent = new Intent(getApplicationContext(),MyInfo.class);
-                intent.putExtra("id",id);
-                startActivity(intent);
+                Intent intent5 = new Intent(getApplicationContext(),MyInfo.class);
+                intent5.putExtra("id",id);
+                startActivity(intent5);
 
             }
         });
@@ -155,13 +155,14 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
 */
 
         for (int i = 0; i<jsonArray.length(); i++ ){
-            JSONObject one;
+            final JSONObject one;
             String catName,userId;
             LatLng position;
             try {
                 one = jsonArray.getJSONObject(i);
                 if (one.has("catName")){
                     catName = one.getString("catName");
+                    Log.e("CATNAME",catName);
                     JSONObject pos =(JSONObject)one.get("catlocate");
                     position = new LatLng(Double.parseDouble(pos.get("lat").toString()), Double.parseDouble(pos.get("lon").toString()));
 
@@ -173,10 +174,18 @@ public class MapPane extends FragmentActivity implements OnMapReadyCallback {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
 
+                            Log.e("YOU","CLICKED MARKER");
                             // 그 마커(고양이 이미지) 클릭 시 카메라 뷰로 인텐트 넘어감 //
-                            Intent intent = new Intent(MapPane.this,CameraView.class);
+                            Intent intent2 = new Intent(MapPane.this,CameraView.class);
                             //인텐트에서 뭐 넘겨줄지 !!
-                            startActivity(intent);
+                            try {
+                                intent2.putExtra("catname",one.getString("catName"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            intent2.putExtra("userinfo",intent.getStringExtra("userinfo"));
+
+                            startActivity(intent2);
                             return true;
                         }
                     });
