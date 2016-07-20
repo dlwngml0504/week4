@@ -7,6 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -51,7 +55,7 @@ import min3d.parser.IParser;
 import min3d.parser.Parser;
 import min3d.vos.Light;
 
-public class CameraView extends RendererActivity {
+public class CameraView extends RendererActivity implements SensorEventListener {
     private final static String TAG = "Camera2testJ";
     private Size mPreviewSize;
     Intent intent = null;
@@ -64,6 +68,11 @@ public class CameraView extends RendererActivity {
     private CameraCaptureSession mPreviewSession;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     private Object3dContainer faceObject3D;
+    private int status=0;
+    private String catname;
+    private SensorManager sm = null;
+    private Sensor Accsensor = null;
+    private float accx=0, accy=0;
     private float[] scale = new float[] {3, 6, 6, 6, 6, 0.05f, 3};
     private int[] light = new int[] {3, 7, 7, 7, 7, 7, 3};
     String filepath = "com.example.juhee.project4:";
@@ -92,6 +101,9 @@ public class CameraView extends RendererActivity {
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.camera_view_activity);
+        sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        // 가속도 센서
+        Accsensor = sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         LinearLayout ll = (LinearLayout)findViewById(R.id.ll);
         ll.addView(_glSurfaceView);
         intent = getIntent();
@@ -133,6 +145,8 @@ public class CameraView extends RendererActivity {
                     e.printStackTrace();
                 } }
         });
+        Log.e("CameraView", intent.getStringExtra("catname"));
+        catname=intent.getStringExtra("catname");
 
         Button item1 = (Button)findViewById(R.id.item1);
         Button item2 = (Button)findViewById(R.id.item2);
@@ -229,7 +243,6 @@ public class CameraView extends RendererActivity {
         }
         mTextureView = (TextureView) findViewById(R.id.texture);
         mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        Log.e("@@@","@@@@@@@@@@@@@@@@@@@@@@@");
 
     }
     @Override
@@ -242,26 +255,45 @@ public class CameraView extends RendererActivity {
     }
     public void initScene()
     {
+        if(catname.equals("아름이")) status=0;
+        else if(catname.equals("진리")) status=1;
+        else if(catname.equals("소망냥")) status=2;
+        else if(catname.equals("치즈냥이")) status=3;
+        else if(catname.equals("서측")) status=4;
+        else if(catname.equals("교수회관냥")) status=5;
+        else if(catname.equals("패컬티")) status=6;
+        Log.e("Cameraview", "status : " + status + "name : "+catname);
         scene.backgroundColor().setAll(0x00000000);
-        scene.lights().add(new Light());
-        scene.lights().add(new Light());
-        scene.lights().add(new Light());
-        IParser myParser = Parser.createParser(Parser.Type.OBJ, getResources(),"com.example.juhee.project4:raw/cat1_obj", true);
+//        scene.lights().add(new Light());
+//        scene.lights().add(new Light());
+//        scene.lights().add(new Light());
+        for(int i=0; i<light[status]; i++){
+            scene.lights().add(new Light());
+        }
+        IParser myParser = Parser.createParser(Parser.Type.OBJ, getResources(),filepath+filename[status], true);
         myParser.parse();
         faceObject3D = myParser.getParsedObject();
         faceObject3D.position().x =faceObject3D.position().z = 0;
-        faceObject3D.position().y = -1;
-        faceObject3D.position().z = -2;
-        faceObject3D.scale().x = faceObject3D.scale().y = faceObject3D.scale().z = 3f;
+        faceObject3D.position().y = -3;
+        faceObject3D.position().z = -3;
+        faceObject3D.rotation().x = -10;
+        faceObject3D.scale().x = faceObject3D.scale().y = faceObject3D.scale().z = scale[status];
 // Depending on the model you will need to change the scale
 
         scene.addChild(faceObject3D);
 
     }
+
+    @Override
+    public void updateScene() {
+        faceObject3D.rotation().y =-3*accx;
+        faceObject3D.rotation().x =-3*accy;
+    }
     @Override
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
+        sm.registerListener(this, Accsensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private void getItemInfo(final int i, final int item_num){
@@ -406,6 +438,7 @@ public class CameraView extends RendererActivity {
             mCameraDevice.close();
             mCameraDevice = null;
         }
+        sm.unregisterListener(this);
     }
 
     protected void startPreview() {
@@ -470,6 +503,21 @@ public class CameraView extends RendererActivity {
         } catch (CameraAccessException e) {
 
             e.printStackTrace();
+        }
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // TODO Auto-generated method stub
+
+    }
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            Log.e("AccelerationX", ""+event.values[0]);
+            Log.e("AccelerationY", ""+event.values[1]);
+            Log.e("AccelerationZ", ""+event.values[2]);
+            accx+=event.values[0];
+            accy+=event.values[1];
         }
     }
 }
